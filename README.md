@@ -1,6 +1,6 @@
-# Detektif Halusinasi KA: Temukan Anomali Rekayasa
+# Detektif Halusinasi Citra KA: Temukan Anomali Rekayasa (Gambar)
 
-**Detektif Halusinasi KA** adalah game investigasi interaktif yang menguji ketelitian visual dan kemampuan berpikir kritis (literasi informasi) pemain terhadap konten buatan Kecerdasan Artifisial (KA / AI). Permainan ini membagi kasus menjadi dua tipe penyelidikan: menemukan anomali visual langsung pada gambar (seperti jari tangan ganda atau bayangan tidak sinkron) dan melacak halusinasi kebohongan fakta sains/sejarah dalam paragraf teks.
+**Detektif Halusinasi Citra KA** adalah game investigasi interaktif yang menguji ketelitian visual dan kemampuan berpikir kritis (literasi informasi) pemain terhadap konten gambar buatan Kecerdasan Artifisial (KA / AI). Pemain ditantang untuk mencari kecacatan fisik gambar AI langsung pada gambar (seperti jari tangan ganda, bayangan tidak sinkron, atau distorsi geometri optik).
 
 ## 🚀 Fitur Permainan
 
@@ -10,14 +10,8 @@
    * Clicks yang berhasil (Hit) memicu scanner crosshair berwarna hijau yang memancarkan pendaran pulsa.
    * Clicks yang salah (Miss) memicu riak radar merah serta getaran target yang menandakan peringatan salah arah penyelidikan.
 
-2. **Investigasi Teks Faktual (Highlight the Hoax):**
-   * Pemain disuguhkan dokumen ketikan dossier berisikan rangkuman teks peristiwa sains atau potongan sejarah.
-   * Teks dipecah menjadi segmen interaktif yang dapat disorot dan diklik.
-   * Pemain harus mengidentifikasi dan mengklik satu kalimat/frasa yang memuat informasi menyesatkan (halusinasi fakta) yang dikeluarkan sistem AI.
-   * Pilihan benar memicu highlight hijau dengan penjelasan kebenaran ilmiah, sedangkan pilihan salah memicu goyangan getar berwarna merah.
-
-3. **Indeks Akurasi & Pangkat:**
-   * Di akhir investigasi, pemain dievaluasi berdasarkan skor keberhasilan menyelesaikan 10 tingkatan investigasi.
+2. **Indeks Akurasi & Pangkat:**
+   * Di akhir investigasi, pemain dievaluasi berdasarkan skor keberhasilan menyelesaikan 5 tingkatan investigasi gambar.
    * Pemain dianugerahi pangkat kredibilitas (mulai dari *Piksel Kabur* hingga *Mata Dewa (Detektif Legendaris)*).
 
 ## 🛠️ Tech Stack
@@ -32,19 +26,21 @@
 
 ```text
 detektif-halusinasi-challenge/
+├── assets/
+│   └── logo-pusbuk.webp         # Logo Pusat Perbukuan Kemendikbudristek
 ├── src/
 │   ├── components/
 │   │   ├── InteractiveImage.tsx # Kanvas pencarian anomali gambar dengan lensa zoom
 │   │   └── PortraitWarning.tsx  # Peringatan kunci orientasi lanskap mobile
 │   ├── data/
-│   │   └── questions.ts         # Data 10 tingkatan investigasi (gambar & teks segments)
+│   │   └── questions.ts         # Data 5 tingkatan investigasi gambar
 │   ├── hooks/
-│   │   └── useGameState.ts      # Logika state game (skor, klik koordinat, klik kalimat)
+│   │   └── useGameState.ts      # Logika state game (skor, klik koordinat)
 │   ├── pages/
 │   │   ├── splash/
 │   │   │   └── SplashPage.tsx   # Halaman muka dossier misi penyelidikan
 │   │   ├── arena/
-│   │   │   └── ArenaPage.tsx    # Arena pengerjaan kasus (citra gambar & dokumen teks)
+│   │   │   └── ArenaPage.tsx    # Arena pengerjaan kasus (citra gambar)
 │   │   └── result/
 │   │       └── ResultPage.tsx   # Laporan evaluasi hasil dan rekapitulasi temuan
 │   ├── utils/
