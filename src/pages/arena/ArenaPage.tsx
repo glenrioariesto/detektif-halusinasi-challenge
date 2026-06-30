@@ -37,10 +37,10 @@ export function ArenaPage({
   const [isClueOpen, setIsClueOpen] = useState(false);
 
   return (
-    <div className="h-screen w-screen bg-[#070514] text-emerald-100 flex items-center justify-center p-3 sm:p-5 overflow-hidden relative select-none font-mono">
+    <div className="h-screen w-screen bg-[#070514] text-emerald-100 flex items-center justify-center overflow-hidden relative select-none font-mono">
       
-      {/* 16:9 Aspect Ratio Game Board - Immersive Game UI */}
-      <div className="relative w-full h-full max-w-[177.78vh] max-h-[56.25vw] aspect-[16/9] bg-black/60 border-3 border-emerald-950 rounded-3xl overflow-hidden shadow-2xl z-10 flex flex-col">
+      {/* Immersive Game UI stretching to landscape screen bounds */}
+      <div className="relative w-full h-full z-10 flex flex-col">
         
         {/* HUD: Top-Left Exit Icon Button */}
         <button
