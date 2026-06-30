@@ -13,24 +13,24 @@ export function SplashPage({ onStart }: SplashPageProps) {
       <div className="absolute top-1/4 left-1/4 w-72 h-72 md:w-96 md:h-96 bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none"></div>
       <div className="absolute bottom-1/4 right-1/4 w-72 h-72 md:w-96 md:h-96 bg-emerald-600/5 rounded-full blur-[100px] pointer-events-none"></div>
 
+      {/* Pusbuk Logo on Absolute Top Left - Responsive Size */}
+      <div className="absolute top-3 left-3 sm:top-5 sm:left-5 z-50 flex items-center bg-[#050b05]/60 border border-emerald-955 px-2.5 py-1.5 rounded-xl shadow-lg shrink-0">
+        <img 
+          src={logoPusbuk} 
+          alt="Logo Pusbuk" 
+          className="h-6 sm:h-8 md:h-10 w-auto object-contain"
+        />
+      </div>
+
       {/* Main Container */}
       <div className="z-10 max-w-xl w-full flex flex-col items-center text-center p-4">
-        {/* Pusbuk Logo Centered */}
-        <div className="flex items-center justify-center bg-[#050b05]/95 border border-emerald-955 px-3 py-1.5 rounded-2xl shadow-xl mb-6 shrink-0">
-          <img 
-            src={logoPusbuk} 
-            alt="Logo Pusbuk" 
-            className="h-8 md:h-10 w-auto object-contain"
-          />
-        </div>
-
         {/* Title (h1) */}
         <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight font-display mb-3 select-none uppercase text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-green-400 to-teal-500">
           DETEKTIF HALUSINASI
         </h1>
         
         {/* Subtitle (h2) */}
-        <h2 className="text-xs md:text-sm font-mono text-emerald-550 mb-8 uppercase tracking-widest font-black">
+        <h2 className="text-xs md:text-sm font-mono text-emerald-555 mb-8 uppercase tracking-widest font-black">
           Kecerdasan Artifisial: Anomali & Hoaks
         </h2>
 
