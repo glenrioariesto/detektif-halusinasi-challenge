@@ -30,13 +30,13 @@ export function InteractiveGridBg() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      // Initialize 130 glowing dust particles
+      // Initialize 130 glowing dust particles using emerald/lime green colors
       const arr: Particle[] = [];
       const colors = [
-        'rgba(168, 85, 247, 0.45)', // Purple
-        'rgba(236, 72, 153, 0.45)', // Fuchsia
-        'rgba(99, 102, 241, 0.45)',  // Indigo
-        'rgba(244, 63, 94, 0.45)'    // Rose pink
+        'rgba(16, 185, 129, 0.45)', // Emerald
+        'rgba(52, 211, 153, 0.45)', // Mint/Emerald
+        'rgba(34, 197, 94, 0.45)',  // Lime green
+        'rgba(5, 150, 105, 0.45)'   // Dark Emerald
       ];
       
       for (let i = 0; i < 130; i++) {
@@ -87,8 +87,8 @@ export function InteractiveGridBg() {
     window.addEventListener('click', handleClick);
 
     const draw = () => {
-      // Semi-transparent trailing background for a fluid motion blur effect!
-      ctx.fillStyle = 'rgba(7, 5, 20, 0.15)';
+      // Semi-transparent trailing background for a fluid motion blur effect, matching body color #040804
+      ctx.fillStyle = 'rgba(4, 8, 4, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const mouse = mouseRef.current;
@@ -166,10 +166,10 @@ export function InteractiveGridBg() {
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Draw halo connection line to mouse if close
+        // Draw halo connection line to mouse if close (Emerald glow)
         if (dist < 120) {
           const lineAlpha = (1 - dist / 120) * 0.12;
-          ctx.strokeStyle = `rgba(168, 85, 247, ${lineAlpha})`;
+          ctx.strokeStyle = `rgba(52, 211, 153, ${lineAlpha})`;
           ctx.lineWidth = 0.5;
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
@@ -190,7 +190,7 @@ export function InteractiveGridBg() {
 
           if (d < 70) {
             const lineOpacity = (1 - d / 70) * 0.08;
-            ctx.strokeStyle = `rgba(129, 140, 248, ${lineOpacity})`;
+            ctx.strokeStyle = `rgba(52, 211, 153, ${lineOpacity})`;
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
