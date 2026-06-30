@@ -27,7 +27,7 @@ export function SplashPage({ onStart }: SplashPageProps) {
         {/* Badge header */}
         <div className="flex items-center gap-2 px-3 py-1 bg-[#091509] border border-emerald-900/60 text-emerald-400 rounded-full text-[10px] md:text-xs font-mono mb-6 uppercase tracking-widest glow-emerald">
           <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-          <span>Game Investigasi Faktual</span>
+          <span>Game Investigasi Citra</span>
         </div>
 
         {/* Big title */}
@@ -47,30 +47,30 @@ export function SplashPage({ onStart }: SplashPageProps) {
           <div className="flex items-center gap-3 border-b border-emerald-950 pb-4 mb-4">
             <ShieldAlert className="w-5 h-5 md:w-6 md:h-6 text-emerald-400" />
             <h3 className="font-mono text-xs md:text-sm font-bold text-emerald-100 uppercase tracking-wider">
-              BERKAS MISI: #HAL-102
+              BERKAS MISI: #HAL-102-IMG
             </h3>
           </div>
 
           <p className="text-emerald-200/80 text-xs md:text-sm leading-relaxed mb-4 font-medium">
-            Kecerdasan Artifisial (KA) rentan terhadap halusinasi—kondisi di mana sistem dengan penuh keyakinan menghasilkan output gambar yang cacat secara fisik, atau tulisan yang salah secara logika dan sejarah.
+            Kecerdasan Artifisial (KA) rentan terhadap halusinasi—kondisi di mana sistem dengan penuh keyakinan menghasilkan output gambar yang cacat secara fisik, asimetris, dan melanggar hukum optik alam.
           </p>
           <p className="text-emerald-200 text-xs md:text-sm leading-relaxed mb-6 font-bold">
-            Pecahkan 10 tingkat penyelidikan yang menggabungkan analisis citra visual dan validasi informasi tekstual:
+            Pecahkan 5 tingkat penyelidikan analisis citra visual untuk mendeteksi anomali pada gambar hasil rekayasa KA:
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex gap-3 bg-[#010301]/85 p-3 rounded-xl border border-emerald-950/70">
               <Eye className="w-4.5 h-4.5 md:w-5 md:h-5 text-emerald-450 shrink-0" />
               <div>
-                <h4 className="text-[10px] md:text-xs font-bold font-mono text-white mb-1 uppercase tracking-wider">Investigasi Citra</h4>
-                <p className="text-[10px] md:text-xs text-emerald-450 leading-normal font-medium">Gunakan lensa scan digital untuk mencari anomali visual fisik, lalu klik langsung pada titik halusinasi di dalam gambar.</p>
+                <h4 className="text-[10px] md:text-xs font-bold font-mono text-white mb-1 uppercase tracking-wider">Anomali Anatomi</h4>
+                <p className="text-[10px] md:text-xs text-emerald-450 leading-normal font-medium">Cari kesalahan bentuk jari tangan ganda, anting melayang, atau kegagalan struktur fisik makhluk hidup.</p>
               </div>
             </div>
             <div className="flex gap-3 bg-[#010301]/85 p-3 rounded-xl border border-emerald-950/70">
               <FileText className="w-4.5 h-4.5 md:w-5 md:h-5 text-emerald-450 shrink-0" />
               <div>
-                <h4 className="text-[10px] md:text-xs font-bold font-mono text-white mb-1 uppercase tracking-wider">Investigasi Faktual</h4>
-                <p className="text-[10px] md:text-xs text-emerald-450 leading-normal font-medium">Baca paragraf berita sains atau peristiwa sejarah, lalu klik kalimat mana yang memuat kebohongan/halusinasi logika.</p>
+                <h4 className="text-[10px] md:text-xs font-bold font-mono text-white mb-1 uppercase tracking-wider">Geometri & Refleksi</h4>
+                <p className="text-[10px] md:text-xs text-emerald-450 leading-normal font-medium">Periksa pantulan cermin yang asimetris, distorsi hukum perspektif optik, dan pola reklame yang meleleh.</p>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@ export function SplashPage({ onStart }: SplashPageProps) {
           </span>
         </button>
 
-        <p className="text-[10px] md:text-xs text-emerald-600 font-mono mt-4">10 Tingkat Penyelidikan Tersedia</p>
+        <p className="text-[10px] md:text-xs text-emerald-600 font-mono mt-4">5 Tingkat Penyelidikan Tersedia</p>
       </div>
     </div>
   );

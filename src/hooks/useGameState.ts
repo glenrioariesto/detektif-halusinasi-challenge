@@ -4,10 +4,10 @@ import { CAMPAIGN_LEVELS } from '../data/questions';
 import { playSynthesizerNote } from '../utils/audio';
 
 const getRank = (score: number) => {
-  if (score === 10) return { title: "Mata Dewa (Detektif Legendaris)", desc: "Sempurna! Anda berhasil mengungkap semua anomali visual dan halusinasi teks tanpa luput satu pun.", color: "text-emerald-300 border-2 border-emerald-500 bg-emerald-950/30 glow-emerald" };
-  if (score >= 7) return { title: "Detektif Halusinasi Senior", desc: "Sangat jeli melihat keganjilan piksel dan sanggup menyaring hoaks informasi dengan baik.", color: "text-green-300 border-2 border-green-600 bg-green-950/30" };
-  if (score >= 4) return { title: "Penyelidik Siber Magang", desc: "Kejelian Anda cukup baik, namun masih sering terkecoh oleh detail kecil rekayasa KA.", color: "text-teal-300 border-2 border-teal-600 bg-teal-950/30" };
-  return { title: "Piksel Kabur (Detektif Amatir)", desc: "Anda masih perlu melatih kejelian mata dan lebih kritis dalam memvalidasi informasi digital.", color: "text-rose-400 border-2 border-rose-800 bg-rose-950/30 glow-rose" };
+  if (score === 5) return { title: "Mata Dewa (Detektif Legendaris)", desc: "Sempurna! Anda berhasil mengungkap semua anomali visual tanpa luput satu pun.", color: "text-emerald-300 border-2 border-emerald-500 bg-emerald-950/30 glow-emerald" };
+  if (score >= 4) return { title: "Detektif Halusinasi Senior", desc: "Sangat jeli melihat keganjilan piksel dan sanggup mendeteksi rekayasa citra KA dengan baik.", color: "text-green-300 border-2 border-green-600 bg-green-950/30" };
+  if (score >= 2) return { title: "Penyelidik Siber Magang", desc: "Kejelian Anda cukup baik, namun masih sering terkecoh oleh detail kecil rekayasa KA.", color: "text-teal-300 border-2 border-teal-600 bg-teal-950/30" };
+  return { title: "Piksel Kabur (Detektif Amatir)", desc: "Anda masih perlu melatih kejelian mata dan lebih kritis dalam mengamati detail citra digital.", color: "text-rose-400 border-2 border-rose-800 bg-rose-950/30 glow-rose" };
 };
 
 export const useGameState = () => {
