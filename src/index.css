@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius-3xl: 20px;
+  --radius-2xl: 16px;
+  --radius-xl: 12px;
+  --radius-lg: 8px;
+  --radius-md: 6px;
+  --radius-sm: 4px;
+}
+
+body {
+  background-color: #040804; /* Obsidian Glitch Black */
+  font-family: var(--font-sans);
+  color: #a7f3d0; /* Lime green text tint */
+}
+
+/* Reduced Motion Accessibility Settings */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-delay: 0s !important;
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom Scrollbars - Matrix Terminal Green */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #020402;
+}
+::-webkit-scrollbar-thumb {
+  background: #15803d;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #22c55e;
+}
+
+/* Cyber Matrix Glitch Scanline effect for background */
+.scanlines {
+  position: relative;
+  overflow: hidden;
+}
+.scanlines::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(16, 185, 129, 0.08) 50%);
+  background-size: 100% 4px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Lime Glitch Glows */
+.glow-lime {
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+}
+.glow-emerald {
+  box-shadow: 0 0 15px rgba(52, 211, 153, 0.4);
+}
+.glow-rose {
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+}
+.glow-violet {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+}
+
+@keyframes grid-move-green {
+  0% { background-position: 0 0; }
+  100% { background-position: 30px 30px; }
+}
+
+.bg-grid-matrix {
+  background-size: 30px 30px;
+  background-image: 
+    linear-gradient(to right, rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+  animation: grid-move-green 15s linear infinite;
+}
+
+/* Fade in custom keyframe */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
