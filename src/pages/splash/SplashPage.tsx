@@ -1,54 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Play } from 'lucide-react';
 import logoPusbuk from '../../../assets/logo-pusbuk.webp';
+import { InteractiveGridBg } from '../../components/InteractiveGridBg';
 
 interface SplashPageProps {
   onStart: () => void;
 }
 
 export function SplashPage({ onStart }: SplashPageProps) {
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const { clientX, clientY } = e;
-    // Calculate distance from screen center
-    const x = (clientX - window.innerWidth / 2) / 35;
-    const y = (clientY - window.innerHeight / 2) / 35;
-    setCoords({ x, y });
-  };
-
-  const handleMouseLeave = () => {
-    // Reset position smoothly when cursor leaves
-    setCoords({ x: 0, y: 0 });
-  };
-
   return (
-    <div 
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="min-h-screen w-screen bg-[#020502] relative flex flex-col items-center justify-center p-4 md:p-6 text-emerald-250 scanlines select-none overflow-hidden animate-fadeIn"
-    >
-      {/* Interactive Background Grid */}
-      <div 
-        className="absolute inset-0 bg-grid-matrix pointer-events-none transition-transform duration-300 ease-out"
-        style={{ 
-          transform: `translate(${coords.x * 0.3}px, ${coords.y * 0.3}px) scale(1.02)`,
-        }}
-      ></div>
-
-      {/* Ambient glowing radial backgrounds */}
-      <div 
-        className="absolute top-1/4 left-1/4 w-72 h-72 md:w-96 md:h-96 bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none transition-transform duration-500 ease-out"
-        style={{ 
-          transform: `translate(${coords.x * -0.6}px, ${coords.y * -0.6}px)`,
-        }}
-      ></div>
-      <div 
-        className="absolute bottom-1/4 right-1/4 w-72 h-72 md:w-96 md:h-96 bg-emerald-600/5 rounded-full blur-[100px] pointer-events-none transition-transform duration-700 ease-out"
-        style={{ 
-          transform: `translate(${coords.x * -0.9}px, ${coords.y * -0.9}px)`,
-        }}
-      ></div>
+    <div className="min-h-screen w-screen bg-[#020502] relative flex flex-col items-center justify-center p-4 md:p-6 text-emerald-250 scanlines select-none overflow-hidden animate-fadeIn">
+      {/* Interactive Background Grid Canvas */}
+      <InteractiveGridBg />
 
       {/* Pusbuk Logo on Absolute Top Left - Responsive Size */}
       <div className="absolute top-3 left-3 sm:top-5 sm:left-5 z-50 shrink-0 animate-fadeIn">
@@ -60,12 +23,7 @@ export function SplashPage({ onStart }: SplashPageProps) {
       </div>
 
       {/* Main Container */}
-      <div 
-        className="z-10 max-w-xl w-full flex flex-col items-center text-center p-4 transition-transform duration-200 ease-out"
-        style={{ 
-          transform: `translate(${coords.x * 0.15}px, ${coords.y * 0.15}px)`,
-        }}
-      >
+      <div className="z-10 max-w-xl w-full flex flex-col items-center text-center p-4">
         {/* Title (h1) */}
         <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight font-display mb-3 select-none uppercase text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-green-400 to-teal-500">
           DETEKTIF HALUSINASI
