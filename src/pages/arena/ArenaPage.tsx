@@ -140,43 +140,45 @@ export function ArenaPage({
         {/* MODAL 1: DETECTIVE CLUES BOARD */}
         {isClueOpen && (
           <div className="absolute inset-0 bg-black/75 backdrop-blur-sm z-40 flex items-center justify-center p-4 animate-fadeIn">
-            <div className="w-full max-w-md bg-[#020502]/95 border-2 border-emerald-800 rounded-2xl p-5 shadow-2xl relative">
+            <div className="w-full max-w-md bg-[#020502]/95 border-2 border-emerald-800 rounded-2xl p-4 sm:p-5 shadow-2xl relative max-h-[90vh] overflow-y-auto flex flex-col">
               <button
                 type="button"
                 onClick={() => setIsClueOpen(false)}
-                className="absolute top-4 right-4 text-emerald-500 hover:text-white transition-colors cursor-pointer"
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 text-emerald-500 hover:text-white transition-colors cursor-pointer z-10"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
 
-              <div className="flex items-center gap-2 border-b border-emerald-950 pb-2 mb-4">
-                <HelpCircle className="w-4 h-4 text-emerald-400" />
-                <h4 className="text-xs font-bold text-emerald-100 uppercase tracking-wider">
+              <div className="flex items-center gap-2 border-b border-emerald-950 pb-1.5 sm:pb-2 mb-3 sm:mb-4 shrink-0">
+                <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
+                <h4 className="text-[10px] sm:text-xs font-bold text-emerald-100 uppercase tracking-wider">
                   Petunjuk Penyelidikan
                 </h4>
               </div>
 
-              <div className="mb-4">
-                <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-900/30">
-                  {activeLevel.category}
-                </span>
-                <p className="text-xs text-emerald-250 mt-3 leading-relaxed text-justify">
-                  {activeLevel.description}
-                </p>
-              </div>
+              <div className="mb-3 sm:mb-4 overflow-y-auto pr-1">
+                <div className="mb-3">
+                  <span className="text-[8px] sm:text-[9px] font-bold text-emerald-400 uppercase tracking-widest bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-900/30">
+                    {activeLevel.category}
+                  </span>
+                  <p className="text-[11px] sm:text-xs text-emerald-250 mt-2 sm:mt-3 leading-relaxed text-justify">
+                    {activeLevel.description}
+                  </p>
+                </div>
 
-              <div className="bg-emerald-950/20 border border-emerald-900/40 rounded-xl p-3.5 mb-4">
-                <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider block mb-1">
-                  Clue / Informasi Kunci:
-                </span>
-                <p className="text-xs text-emerald-300 leading-relaxed font-sans font-medium">
-                  {activeLevel.clue}
-                </p>
+                <div className="bg-emerald-950/20 border border-emerald-900/40 rounded-xl p-2.5 sm:p-3.5">
+                  <span className="text-[8px] sm:text-[9px] font-bold text-emerald-400 uppercase tracking-wider block mb-1">
+                    Clue / Informasi Kunci:
+                  </span>
+                  <p className="text-[11px] sm:text-xs text-emerald-350 leading-relaxed font-sans font-medium">
+                    {activeLevel.clue}
+                  </p>
+                </div>
               </div>
 
               {attempts > 0 && (
-                <div className="flex items-center gap-2 text-rose-500 text-xs mb-4">
-                  <ShieldAlert className="w-4 h-4" />
+                <div className="flex items-center gap-2 text-rose-500 text-[10px] sm:text-xs mb-3 sm:mb-4 shrink-0">
+                  <ShieldAlert className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span>Percobaan Gagal: <strong className="font-mono">{attempts} kali</strong></span>
                 </div>
               )}
@@ -184,7 +186,7 @@ export function ArenaPage({
               <button
                 type="button"
                 onClick={() => setIsClueOpen(false)}
-                className="w-full py-2 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-100 rounded-lg text-xs font-bold transition-colors cursor-pointer text-center"
+                className="w-full py-2 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700 text-emerald-100 rounded-lg text-[10px] sm:text-xs font-bold transition-colors cursor-pointer text-center shrink-0"
               >
                 Kembali ke Arena
               </button>
@@ -195,23 +197,23 @@ export function ArenaPage({
         {/* MODAL 2: FEEDBACK / REVEAL OVERLAY */}
         {showFeedback && (
           <div className="absolute inset-0 bg-black/85 backdrop-blur-md z-45 flex items-center justify-center p-4 animate-fadeIn">
-            <div className="w-full max-w-md bg-[#020502]/95 border-2 border-emerald-500 rounded-2xl p-5 shadow-2xl relative text-center">
+            <div className="w-full max-w-md bg-[#020502]/95 border-2 border-emerald-500 rounded-2xl p-4 sm:p-5 shadow-2xl relative text-center max-h-[90vh] overflow-y-auto flex flex-col justify-center">
               
               {/* Correctness Header */}
-              <div className="w-12 h-12 rounded-full bg-emerald-950/60 border-2 border-emerald-400 flex items-center justify-center mx-auto mb-3 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
-                <CheckCircle2 className="w-6 h-6 text-emerald-400 animate-pulse" />
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-emerald-950/60 border-2 border-emerald-400 flex items-center justify-center mx-auto mb-2 sm:mb-3 shadow-[0_0_15px_rgba(16,185,129,0.3)] shrink-0">
+                <CheckCircle2 className="w-4 h-4 sm:w-6 sm:h-6 text-emerald-400 animate-pulse" />
               </div>
 
-              <h3 className="text-sm font-black text-emerald-400 uppercase tracking-widest mb-1">
+              <h3 className="text-xs sm:text-sm font-black text-emerald-400 uppercase tracking-widest mb-0.5 sm:mb-1 shrink-0">
                 ANOMALI TERKUNCI!
               </h3>
-              <p className="text-[9px] font-mono text-emerald-500 uppercase tracking-wider mb-4">
+              <p className="text-[8px] sm:text-[9px] font-mono text-emerald-500 uppercase tracking-wider mb-2.5 sm:mb-4 shrink-0">
                 Analisis Kebenaran Faktual
               </p>
 
               {/* Reveal details */}
-              <div className="bg-emerald-950/20 border border-emerald-900/40 rounded-xl p-4 mb-5 text-left max-h-[160px] overflow-y-auto">
-                <p className="text-xs text-emerald-250 leading-relaxed font-sans font-medium text-justify">
+              <div className="bg-emerald-950/20 border border-emerald-900/40 rounded-xl p-3 sm:p-4 mb-3 sm:mb-5 text-left max-h-[100px] sm:max-h-[160px] overflow-y-auto shrink-0">
+                <p className="text-[11px] sm:text-xs text-emerald-250 leading-relaxed font-sans font-medium text-justify">
                   {activeLevel.explanation}
                 </p>
               </div>
@@ -219,10 +221,10 @@ export function ArenaPage({
               <button
                 type="button"
                 onClick={onAdvance}
-                className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 border border-emerald-500 text-black rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-[0_0_15px_rgba(16,185,129,0.25)] hover:scale-[1.02] active:scale-98"
+                className="w-full py-2.5 sm:py-3 bg-emerald-600 hover:bg-emerald-500 border border-emerald-500 text-black rounded-xl text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-[0_0_15px_rgba(16,185,129,0.25)] hover:scale-[1.02] active:scale-98 shrink-0"
               >
                 <span>{currentLevelIndex === totalLevels - 1 ? 'Lihat Hasil Akhir' : 'Lanjut ke Kasus Berikutnya'}</span>
-                <ArrowRight className="w-4.5 h-4.5 stroke-[2.5px]" />
+                <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.5px]" />
               </button>
             </div>
           </div>
