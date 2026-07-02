@@ -1,5 +1,5 @@
-import React from 'react';
-import { Award, RotateCcw, Check, BookOpen, ImageIcon, FileText } from 'lucide-react';
+import React, { useState } from 'react';
+import { Award, RotateCcw, Check, BookOpen, ImageIcon, FileText, X } from 'lucide-react';
 import { UserLevelAnswer } from '../../types';
 import { CAMPAIGN_LEVELS } from '../../data/questions';
 
@@ -11,37 +11,38 @@ interface ResultPageProps {
 }
 
 export function ResultPage({ score, answers, onRestart, getRank }: ResultPageProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const rank = getRank(score);
   const accuracy = Math.round((score / CAMPAIGN_LEVELS.length) * 100);
 
   return (
-    <div className="min-h-screen w-screen bg-transparent relative flex flex-col items-center justify-center p-6 text-emerald-200 scanlines overflow-y-auto">
+    <div className="h-screen w-screen bg-[#040804] bg-transparent relative flex flex-col items-center justify-center p-4 text-emerald-250 scanlines overflow-hidden">
       {/* Glow background circles */}
       <div className="absolute top-10 left-10 w-96 h-96 bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-green-500/5 rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="z-10 max-w-4xl w-full flex flex-col items-center py-8 select-none animate-fadeIn">
+      <div className="z-10 max-w-3xl w-full flex flex-col items-center select-none animate-fadeIn max-h-[95vh] overflow-y-auto pr-1">
         {/* Victory Icon Badge */}
-        <div className="w-16 h-16 rounded-full bg-[#091509] border-2 border-emerald-500 flex items-center justify-center mb-4 glow-emerald">
-          <Award className="w-8 h-8 text-emerald-400" />
+        <div className="w-12 h-12 rounded-full bg-[#091509] border-2 border-emerald-500 flex items-center justify-center mb-3 glow-emerald shrink-0">
+          <Award className="w-6 h-6 text-emerald-400" />
         </div>
 
         {/* Headings */}
-        <h2 className="text-2xl md:text-3xl font-extrabold font-display mb-1 text-center uppercase tracking-wide text-emerald-100">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold font-display mb-0.5 text-center uppercase tracking-wide text-emerald-100 shrink-0">
           Evaluasi Laporan Investigasi
         </h2>
-        <p className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest mb-6 font-bold">
+        <p className="text-[9px] font-mono text-emerald-500 uppercase tracking-widest mb-4 font-bold shrink-0">
           Kampanye Misi #HAL-102 Selesai Dievaluasi
         </p>
 
         {/* Score & Rank Dashboard Card */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 w-full mb-6 shrink-0">
           {/* Circular Score Gauge */}
-          <div className="md:col-span-4 bg-[#081208]/90 border border-emerald-900 rounded-2xl p-6 flex flex-col items-center justify-center text-center backdrop-blur-md">
-            <span className="text-[9px] font-mono font-bold text-emerald-500 uppercase tracking-widest mb-4">
+          <div className="md:col-span-4 bg-[#081208]/90 border border-emerald-900 rounded-2xl p-4 flex flex-col items-center justify-center text-center backdrop-blur-md">
+            <span className="text-[9px] font-mono font-bold text-emerald-500 uppercase tracking-widest mb-3">
               Indeks Akurasi
             </span>
-            <div className="relative w-32 h-32 flex items-center justify-center">
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center">
               <div className="absolute inset-0 rounded-full border-4 border-emerald-950"></div>
               <div 
                 className="absolute inset-0 rounded-full border-4 border-emerald-500"
@@ -51,8 +52,8 @@ export function ResultPage({ score, answers, onRestart, getRank }: ResultPagePro
                 }}
               ></div>
               <div className="flex flex-col items-center">
-                <span className="text-3xl font-black font-mono text-emerald-100">{accuracy}%</span>
-                <span className="text-[8px] font-mono text-emerald-450 uppercase font-bold mt-1">
+                <span className="text-2xl font-black font-mono text-emerald-100">{accuracy}%</span>
+                <span className="text-[8px] font-mono text-emerald-455 uppercase font-bold mt-1">
                   {score} / {CAMPAIGN_LEVELS.length} Terkunci
                 </span>
               </div>
@@ -60,20 +61,20 @@ export function ResultPage({ score, answers, onRestart, getRank }: ResultPagePro
           </div>
 
           {/* Rank Badge description */}
-          <div className="md:col-span-8 bg-[#081208]/90 border border-emerald-900 rounded-2xl p-6 flex flex-col justify-center backdrop-blur-md relative overflow-hidden">
-            <span className="text-[9px] font-mono font-bold text-emerald-500 uppercase tracking-widest mb-2">
+          <div className="md:col-span-8 bg-[#081208]/90 border border-emerald-900 rounded-2xl p-4 flex flex-col justify-center backdrop-blur-md relative overflow-hidden">
+            <span className="text-[9px] font-mono font-bold text-emerald-500 uppercase tracking-widest mb-1.5">
               Pangkat Kredibilitas
             </span>
             
-            <div className={`inline-flex self-start px-3 py-1.5 rounded-lg text-xs font-mono font-bold mb-3 ${rank.color}`}>
+            <div className={`inline-flex self-start px-2.5 py-1 rounded-lg text-[10px] sm:text-xs font-mono font-bold mb-2 ${rank.color}`}>
               {rank.title}
             </div>
 
-            <p className="text-emerald-300 text-xs leading-relaxed max-w-lg mb-4 font-medium">
+            <p className="text-emerald-300 text-[11px] sm:text-xs leading-relaxed mb-3 font-medium text-justify">
               {rank.desc}
             </p>
             
-            <div className="flex items-center gap-4 text-xs font-mono text-emerald-450 font-bold">
+            <div className="flex items-center gap-4 text-[10px] font-mono text-emerald-455 font-bold">
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full bg-emerald-400 border border-emerald-950"></div>
                 <span>Kasus Sukses: {score}</span>
@@ -86,78 +87,99 @@ export function ResultPage({ score, answers, onRestart, getRank }: ResultPagePro
           </div>
         </div>
 
-        {/* Case Review Log Table */}
-        <div className="w-full bg-[#081208]/90 border border-emerald-900 rounded-2xl p-6 backdrop-blur-md mb-8">
-          <div className="flex items-center gap-2 border-b border-emerald-950 pb-3 mb-4">
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md shrink-0">
+          {/* Toggle Modal Table Button */}
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
+            className="w-full py-2.5 sm:py-3 bg-[#081208] hover:bg-emerald-950 border border-emerald-800 text-emerald-400 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-98"
+          >
             <BookOpen className="w-4 h-4 text-emerald-400" />
-            <h3 className="font-mono text-xs font-bold text-emerald-100 uppercase tracking-wider">
-              Rekapitulasi Temuan Halusinasi
-            </h3>
-          </div>
+            <span>Lihat Detail Pemeriksaan</span>
+          </button>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left font-mono text-xs text-emerald-250">
-              <thead>
-                <tr className="border-b border-emerald-950 text-emerald-500 pb-2">
-                  <th className="pb-2 font-bold uppercase tracking-wider w-12 text-center">Kasus</th>
-                  <th className="pb-2 font-bold uppercase tracking-wider">Topik/Kategori</th>
-                  <th className="pb-2 font-bold uppercase tracking-wider text-center w-24">Tipe Mode</th>
-                  <th className="pb-2 font-bold uppercase tracking-wider text-center w-24">Percobaan</th>
-                  <th className="pb-2 font-bold uppercase tracking-wider text-center w-24">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-emerald-950/40">
-                {CAMPAIGN_LEVELS.map((c) => {
-                  const ans = answers.find(a => a.levelId === c.id);
-                  return (
-                    <tr key={c.id} className="hover:bg-emerald-950/10">
-                      <td className="py-3 text-center text-emerald-500">#0{c.id}</td>
-                      <td className="py-3 font-sans">
-                        <div className="font-bold text-emerald-100">{c.title}</div>
-                        <div className="text-[10px] text-emerald-500">{c.category}</div>
-                      </td>
-                      <td className="py-3 text-center">
-                        <span className="inline-flex items-center gap-1 bg-[#020502]/60 border border-emerald-900 px-2 py-0.5 rounded text-[10px] font-bold text-emerald-300">
-                          {c.type === 'image' ? (
-                            <>
-                              <ImageIcon className="w-3 h-3 text-emerald-450" /> Citra
-                            </>
-                          ) : (
-                            <>
-                              <FileText className="w-3 h-3 text-emerald-450" /> Teks
-                            </>
-                          )}
-                        </span>
-                      </td>
-                      <td className="py-3 text-center text-emerald-300">
-                        {ans ? `${ans.attemptsCount}x Klik` : '-'}
-                      </td>
-                      <td className="py-3 text-center">
-                        <span className="inline-flex items-center gap-1 text-emerald-400 bg-emerald-950/20 border border-emerald-900/30 px-2 py-0.5 rounded text-[10px] font-bold">
-                          <Check className="w-3 h-3" /> Terpecahkan
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          {/* Restart Button */}
+          <button
+            type="button"
+            onClick={onRestart}
+            className="w-full py-2.5 sm:py-3 bg-gradient-to-r from-emerald-500 to-green-600 border border-emerald-500 hover:from-emerald-400 hover:to-green-500 text-black rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-98"
+          >
+            <RotateCcw className="w-4 h-4 text-emerald-400" />
+            <span>Mulai Ulang Investigasi</span>
+          </button>
         </div>
 
-        {/* Action Button */}
-        <button
-          type="button"
-          onClick={onRestart}
-          className="group relative px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl font-bold text-xs tracking-wider uppercase transition-all duration-300 cursor-pointer shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98]"
-        >
-          <span className="absolute inset-px bg-[#040804] rounded-[10px] group-hover:bg-transparent transition-colors duration-300"></span>
-          
-          <span className="relative z-10 flex items-center gap-2 group-hover:text-black text-emerald-400 font-mono transition-colors">
-            <RotateCcw className="w-4 h-4" />
-            Mulai Ulang Investigasi
-          </span>
-        </button>
+        {/* MODAL WINDOW FOR CASE LOG TABLE */}
+        {isModalOpen && (
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fadeIn">
+            <div className="w-full max-w-3xl bg-[#040804]/95 border-2 border-emerald-800 rounded-2xl p-4 sm:p-5 shadow-2xl relative max-h-[85vh] overflow-y-auto flex flex-col font-mono text-emerald-200">
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-4 right-4 text-emerald-500 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="flex items-center gap-2 border-b border-emerald-950 pb-2 mb-4 shrink-0">
+                <BookOpen className="w-4 h-4 text-emerald-450" />
+                <h3 className="font-mono text-xs font-bold text-emerald-100 uppercase tracking-wider">
+                  Rekapitulasi Temuan Halusinasi
+                </h3>
+              </div>
+
+              <div className="overflow-x-auto overflow-y-auto max-h-[50vh] pr-1 mb-2">
+                <table className="w-full text-left font-mono text-[11px] sm:text-xs text-emerald-250">
+                  <thead>
+                    <tr className="border-b border-emerald-950 text-emerald-500 pb-2">
+                      <th className="pb-2 font-bold uppercase tracking-wider w-12 text-center">Kasus</th>
+                      <th className="pb-2 font-bold uppercase tracking-wider">Topik/Kategori</th>
+                      <th className="pb-2 font-bold uppercase tracking-wider text-center w-24">Tipe Mode</th>
+                      <th className="pb-2 font-bold uppercase tracking-wider text-center w-24">Percobaan</th>
+                      <th className="pb-2 font-bold uppercase tracking-wider text-center w-24">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-emerald-950/40">
+                    {CAMPAIGN_LEVELS.map((c) => {
+                      const ans = answers.find(a => a.levelId === c.id);
+                      return (
+                        <tr key={c.id} className="hover:bg-emerald-950/10">
+                          <td className="py-2.5 text-center text-emerald-500">#0{c.id}</td>
+                          <td className="py-2.5 font-sans text-emerald-100">
+                            <div className="font-bold text-emerald-200">{c.title}</div>
+                            <div className="text-[9px] text-emerald-500">{c.category}</div>
+                          </td>
+                          <td className="py-2.5 text-center">
+                            <span className="inline-flex items-center gap-1 bg-[#020502]/60 border border-emerald-900 px-2 py-0.5 rounded text-[9px] font-bold text-emerald-300">
+                              {c.type === 'image' ? (
+                                <>
+                                  <ImageIcon className="w-3 h-3 text-emerald-455" /> Citra
+                                </>
+                              ) : (
+                                <>
+                                  <FileText className="w-3 h-3 text-emerald-455" /> Teks
+                                </>
+                              )}
+                            </span>
+                          </td>
+                          <td className="py-2.5 text-center text-emerald-300">
+                            {ans ? `${ans.attemptsCount}x Klik` : '-'}
+                          </td>
+                          <td className="py-2.5 text-center">
+                            <span className="inline-flex items-center gap-1 text-emerald-400 bg-emerald-950/20 border border-emerald-900/30 px-2 py-0.5 rounded text-[9px] font-bold">
+                              <Check className="w-3 h-3" /> Terpecahkan
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
