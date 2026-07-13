@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { Award, RotateCcw, Check, BookOpen, ImageIcon, FileText, X } from 'lucide-react';
-import { UserLevelAnswer } from '../../types';
-import { CAMPAIGN_LEVELS } from '../../data/questions';
+import { UserLevelAnswer, Level } from '../../types';
 
 interface ResultPageProps {
   score: number;
   answers: UserLevelAnswer[];
   onRestart: () => void;
   getRank: (score: number) => { title: string; desc: string; color: string };
+  levels: Level[];
 }
 
-export function ResultPage({ score, answers, onRestart, getRank }: ResultPageProps) {
+export function ResultPage({ score, answers, onRestart, getRank, levels }: ResultPageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const rank = getRank(score);
-  const accuracy = Math.round((score / CAMPAIGN_LEVELS.length) * 100);
+  const accuracy = Math.round((score / levels.length) * 100);
+  const isImageMode = levels[0]?.type === 'image';
 
   return (
     <div className="h-screen w-screen bg-[#040804] bg-transparent relative flex flex-col items-center justify-center p-4 text-emerald-250 scanlines overflow-hidden">
@@ -32,7 +33,7 @@ export function ResultPage({ score, answers, onRestart, getRank }: ResultPagePro
           Evaluasi Laporan Investigasi
         </h2>
         <p className="text-[8px] sm:text-[9px] font-mono text-emerald-500 uppercase tracking-widest mb-3 sm:mb-4 font-bold shrink-0">
-          Kampanye Misi #HAL-102 Selesai Dievaluasi
+          Kampanye Misi #HAL-102-FULL Selesai Dievaluasi
         </p>
 
         {/* Score & Rank Dashboard Card (Side-by-side columns on all screens) */}
@@ -54,7 +55,7 @@ export function ResultPage({ score, answers, onRestart, getRank }: ResultPagePro
               <div className="flex flex-col items-center">
                 <span className="text-xl sm:text-2xl font-black font-mono text-emerald-100">{accuracy}%</span>
                 <span className="text-[7px] sm:text-[8px] font-mono text-emerald-450 uppercase font-bold mt-0.5 sm:mt-1">
-                  {score}/{CAMPAIGN_LEVELS.length} Terkunci
+                  {score}/{levels.length} Terkunci
                 </span>
               </div>
             </div>
@@ -81,7 +82,7 @@ export function ResultPage({ score, answers, onRestart, getRank }: ResultPagePro
               </div>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-teal-400 border border-emerald-950"></div>
-                <span>Total: {CAMPAIGN_LEVELS.length} Lvl</span>
+                <span>Total: {levels.length} Lvl</span>
               </div>
             </div>
           </div>
@@ -140,8 +141,8 @@ export function ResultPage({ score, answers, onRestart, getRank }: ResultPagePro
                       <th className="pb-2 font-bold uppercase tracking-wider text-center w-24">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-emerald-950/40">
-                    {CAMPAIGN_LEVELS.map((c) => {
+                  <tbody className="divide-y divide-emerald-955">
+                    {levels.map((c) => {
                       const ans = answers.find(a => a.levelId === c.id);
                       return (
                         <tr key={c.id} className="hover:bg-emerald-950/10">

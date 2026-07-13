@@ -30,7 +30,7 @@ export function SplashPage({ onStart }: SplashPageProps) {
         </h1>
         
         {/* Subtitle (h2) */}
-        <h2 className="text-xs md:text-sm font-mono text-emerald-555 mb-8 uppercase tracking-widest font-black">
+        <h2 className="text-xs md:text-sm font-mono text-emerald-500 mb-8 uppercase tracking-widest font-black">
           Kecerdasan Artifisial: Anomali & Hoaks
         </h2>
 

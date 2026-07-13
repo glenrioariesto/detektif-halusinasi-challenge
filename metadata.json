@@ -1,6 +1,6 @@
 {
-  "name": "Detektif Halusinasi Citra KA (Gambar)",
-  "description": "Game simulasi investigasi interaktif untuk menemukan anomali rekayasa pada gambar buatan AI.",
+  "name": "Detektif Halusinasi KA (Citra & Teks)",
+  "description": "Game simulasi investigasi interaktif untuk menemukan anomali rekayasa pada gambar dan teks buatan Kecerdasan Artifisial.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }

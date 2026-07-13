@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ZoomIn, Target } from 'lucide-react';
+import { ZoomIn, Target, Grid } from 'lucide-react';
 import { Hotspot, MissClick } from '../types';
 
 interface InteractiveImageProps {
@@ -10,6 +10,7 @@ interface InteractiveImageProps {
   missClicks: MissClick[];
   onClick: (x: number, y: number) => void;
   disabled: boolean;
+  showGrid: boolean;
 }
 
 export function InteractiveImage({
@@ -19,7 +20,8 @@ export function InteractiveImage({
   found,
   missClicks,
   onClick,
-  disabled
+  disabled,
+  showGrid
 }: InteractiveImageProps) {
   const [lensState, setLensState] = useState({
     show: false,
@@ -111,7 +113,7 @@ export function InteractiveImage({
     <button
       ref={containerRef}
       type="button"
-      className="relative w-full max-w-2xl h-[360px] md:h-[450px] bg-[#020502]/80 border border-emerald-900 rounded-2xl overflow-hidden flex items-center justify-center cursor-crosshair mx-auto select-none text-left shadow-2xl"
+      className="relative w-full max-w-2xl aspect-[16/10] bg-[#020502]/80 border border-emerald-900 rounded-2xl overflow-hidden flex items-center justify-center cursor-crosshair mx-auto select-none text-left shadow-2xl"
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -121,6 +123,8 @@ export function InteractiveImage({
       onClick={handleImageClick}
       aria-label={`Analisis gambar ${alt} untuk mencari anomali`}
     >
+
+
       {/* Zoom indicator tag */}
       {!found && !disabled && (
         <div className="absolute top-4 right-4 z-10 bg-slate-900/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-slate-700/60 text-slate-400 text-[10px] font-mono flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
@@ -134,7 +138,7 @@ export function InteractiveImage({
         ref={imgRef}
         src={src}
         alt={alt}
-        className="max-w-full max-h-full object-contain transition-all duration-300"
+        className="w-full h-full object-fill transition-all duration-300 rounded-2xl"
         onLoad={() => setImgLoaded(true)}
         style={{ opacity: imgLoaded ? 1 : 0 }}
       />
@@ -144,6 +148,54 @@ export function InteractiveImage({
         <div className="absolute inset-0 flex flex-col items-center justify-center text-emerald-500 font-mono gap-2 text-xs bg-[#020502]">
           <div className="w-8 h-8 border-4 border-emerald-500/20 border-t-emerald-450 rounded-full animate-spin"></div>
           Memuat Gambar Bukti...
+        </div>
+      )}
+
+      {/* Grid Overlay */}
+      {showGrid && imgLoaded && !found && !disabled && (
+        <div className="absolute inset-0 z-20 pointer-events-none select-none">
+          {/* Vertical lines */}
+          {Array.from({ length: 9 }).map((_, i) => (
+            <div
+              key={`v-${i}`}
+              className="absolute top-0 bottom-0 border-l border-emerald-500/20"
+              style={{ left: `${(i + 1) * 10}%` }}
+            />
+          ))}
+          {/* Horizontal lines */}
+          {Array.from({ length: 9 }).map((_, i) => (
+            <div
+              key={`h-${i}`}
+              className="absolute left-0 right-0 border-t border-emerald-500/20"
+              style={{ top: `${(i + 1) * 10}%` }}
+            />
+          ))}
+          
+          {/* Grid Labels (X-Axis: A-J) */}
+          <div className="absolute top-1 left-0 right-0 flex justify-between px-2 text-[8px] font-mono text-emerald-500/40">
+            {['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map((label, idx) => (
+              <span
+                key={`lbl-x-${idx}`}
+                className="absolute text-center"
+                style={{ left: `${idx * 10 + 5}%`, transform: 'translateX(-50%)' }}
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+
+          {/* Grid Labels (Y-Axis: 1-10) */}
+          <div className="absolute top-0 bottom-0 left-1 flex flex-col justify-between py-2 text-[8px] font-mono text-emerald-500/40">
+            {Array.from({ length: 10 }).map((_, idx) => (
+              <span
+                key={`lbl-y-${idx}`}
+                className="absolute text-left"
+                style={{ top: `${idx * 10 + 5}%`, transform: 'translateY(-50%)' }}
+              >
+                {idx + 1}
+              </span>
+            ))}
+          </div>
         </div>
       )}
 

@@ -11,6 +11,7 @@ export default function App() {
     currentLevelIndex,
     activeLevel,
     totalLevels,
+    levelsForMode,
     score,
     answers,
     showFeedback,
@@ -60,6 +61,7 @@ export default function App() {
           answers={answers}
           onRestart={restartGame}
           getRank={getRank}
+          levels={levelsForMode}
         />
       )}
     </div>

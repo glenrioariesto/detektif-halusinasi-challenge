@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, CheckCircle2, Search, ArrowRight, HelpCircle, X, ShieldAlert, Award } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Search, ArrowRight, HelpCircle, X, ShieldAlert, Award, Grid } from 'lucide-react';
 import type { Level, MissClick } from '../../types';
 import { InteractiveImage } from '../../components/InteractiveImage';
 
@@ -35,6 +35,7 @@ export function ArenaPage({
 }: ArenaPageProps) {
   
   const [isClueOpen, setIsClueOpen] = useState(false);
+  const [showGrid, setShowGrid] = useState(false);
 
   return (
     <div className="h-screen w-screen bg-[#070514] text-emerald-100 flex items-center justify-center overflow-hidden relative select-none font-mono">
@@ -68,6 +69,22 @@ export function ArenaPage({
           <Search className="w-5 h-5 text-emerald-400" />
         </button>
 
+        {/* HUD: Bottom-Left Grid Toggle Icon Button (only in image mode) */}
+        {activeLevel.type === 'image' && !showFeedback && (
+          <button
+            type="button"
+            onClick={() => setShowGrid(!showGrid)}
+            className={`absolute bottom-4 left-20 z-30 w-12 h-12 backdrop-blur-md border-2 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 ${
+              showGrid
+                ? 'bg-emerald-500 border-emerald-400 text-black shadow-[0_0_15px_rgba(16,185,129,0.4)]'
+                : 'bg-emerald-950/75 hover:bg-emerald-900/80 border-emerald-600 text-emerald-300 hover:text-white'
+            }`}
+            title="Toggle Grid Koordinat"
+          >
+            <Grid className="w-5 h-5" />
+          </button>
+        )}
+
         {/* HUD: Bottom-Right Level Title Info Badge */}
         <div className="absolute bottom-4 right-4 z-30 px-3.5 py-1.5 bg-black/60 backdrop-blur-md border-2 border-emerald-900/60 rounded-xl text-[10px] sm:text-xs text-emerald-400 font-bold shadow-md">
           Kasus {currentLevelIndex + 1} dari {totalLevels}: {activeLevel.title}
@@ -86,51 +103,55 @@ export function ArenaPage({
                 missClicks={missClicks}
                 onClick={onImageClick}
                 disabled={showFeedback}
+                showGrid={showGrid}
               />
             </div>
           ) : (
             /* SPOT THE HALLUCINATION TEXT MODE */
-            <div className="w-full max-w-xl bg-black/80 border-2 border-emerald-900/65 rounded-2xl p-5 sm:p-7 text-xs sm:text-sm leading-relaxed shadow-2xl relative flex flex-col justify-center min-h-[220px]">
+            <div className="w-full max-w-xl bg-black/80 border-2 border-emerald-900/65 rounded-2xl p-4 sm:p-6 text-xs sm:text-sm leading-relaxed shadow-2xl relative flex flex-col justify-between max-h-[75vh] sm:max-h-[85vh] overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500/20"></div>
               
-              <div className="text-[9px] text-emerald-600 border-b border-emerald-950 pb-2 mb-4 uppercase tracking-wider flex items-center justify-between">
+              <div className="text-[9px] text-emerald-600 border-b border-emerald-950 pb-2 mb-3 uppercase tracking-wider flex items-center justify-between shrink-0">
                 <span>Bukti Dokumen #DOC-{activeLevel.id}</span>
                 <span>Status: Rahasia</span>
               </div>
 
-              <p className="text-emerald-250 text-justify text-xs sm:text-sm leading-7 sm:leading-8 font-sans">
-                {activeLevel.textSegments?.map((seg, idx) => {
-                  const isSelected = selectedSegmentIndex === idx;
-                  const isCorrectSeg = idx === activeLevel.correctSegmentIndex;
+              {/* Scrollable text container */}
+              <div className="flex-1 overflow-y-auto my-2 pr-1 scrollbar-thin">
+                <p className="text-emerald-250 text-justify text-xs sm:text-sm leading-7 sm:leading-8 font-sans">
+                  {activeLevel.textSegments?.map((seg, idx) => {
+                    const isSelected = selectedSegmentIndex === idx;
+                    const isCorrectSeg = idx === activeLevel.correctSegmentIndex;
 
-                  let bgClass = "border-emerald-950 text-emerald-350 hover:border-emerald-450 hover:text-emerald-300";
-                  
-                  if (showFeedback && isCorrectSeg) {
-                    bgClass = "bg-emerald-950/40 border-emerald-400 text-emerald-400 font-bold border-solid glow-emerald";
-                  } else if (isSelected) {
-                    if (isCorrectSeg) {
+                    let bgClass = "border-emerald-950 text-emerald-350 hover:border-emerald-450 hover:text-emerald-300";
+                    
+                    if (showFeedback && isCorrectSeg) {
                       bgClass = "bg-emerald-950/40 border-emerald-400 text-emerald-400 font-bold border-solid glow-emerald";
-                    } else {
-                      bgClass = "bg-rose-950/40 border-rose-500 text-rose-400 font-bold border-solid animate-pulse glow-rose";
+                    } else if (isSelected) {
+                      if (isCorrectSeg) {
+                        bgClass = "bg-emerald-950/40 border-emerald-400 text-emerald-400 font-bold border-solid glow-emerald";
+                      } else {
+                        bgClass = "bg-rose-950/40 border-rose-500 text-rose-400 font-bold border-solid animate-pulse glow-rose";
+                      }
                     }
-                  }
 
-                  return (
-                    <button
-                      type="button"
-                      key={seg}
-                      onClick={() => !showFeedback && onSegmentClick(idx)}
-                      className={`inline cursor-pointer border-b border-dashed px-1 py-0.5 rounded transition-all duration-200 text-left ${bgClass}`}
-                      style={{ pointerEvents: showFeedback ? 'none' : 'auto' }}
-                      disabled={showFeedback}
-                    >
-                      {seg}
-                    </button>
-                  );
-                })}
-              </p>
+                    return (
+                      <button
+                        type="button"
+                        key={seg}
+                        onClick={() => !showFeedback && onSegmentClick(idx)}
+                        className={`inline cursor-pointer border-b border-dashed px-1 py-0.5 rounded transition-all duration-200 text-left ${bgClass}`}
+                        style={{ pointerEvents: showFeedback ? 'none' : 'auto' }}
+                        disabled={showFeedback}
+                      >
+                        {seg}
+                      </button>
+                    );
+                  })}
+                </p>
+              </div>
               
-              <div className="text-[8px] text-emerald-600 border-t border-emerald-950 pt-2 mt-4 text-right uppercase">
+              <div className="text-[8px] text-emerald-600 border-t border-emerald-950 pt-2 mt-2 text-right uppercase shrink-0">
                 <span>Pilih kalimat yang memuat anomali teks</span>
               </div>
             </div>

@@ -4,15 +4,16 @@ import { CAMPAIGN_LEVELS } from '../data/questions';
 import { playSynthesizerNote } from '../utils/audio';
 
 const getRank = (score: number) => {
-  if (score === 5) return { title: "Mata Dewa (Detektif Legendaris)", desc: "Sempurna! Anda berhasil mengungkap semua anomali visual tanpa luput satu pun.", color: "text-emerald-300 border-2 border-emerald-500 bg-emerald-950/30 glow-emerald" };
-  if (score >= 4) return { title: "Detektif Halusinasi Senior", desc: "Sangat jeli melihat keganjilan piksel dan sanggup mendeteksi rekayasa citra KA dengan baik.", color: "text-green-300 border-2 border-green-600 bg-green-950/30" };
-  if (score >= 2) return { title: "Penyelidik Siber Magang", desc: "Kejelian Anda cukup baik, namun masih sering terkecoh oleh detail kecil rekayasa KA.", color: "text-teal-300 border-2 border-teal-600 bg-teal-950/30" };
-  return { title: "Piksel Kabur (Detektif Amatir)", desc: "Anda masih perlu melatih kejelian mata dan lebih kritis dalam mengamati detail citra digital.", color: "text-rose-400 border-2 border-rose-800 bg-rose-950/30 glow-rose" };
+  if (score === 10) return { title: "Mata Dewa (Detektif Legendaris)", desc: "Sempurna! Anda berhasil mengungkap semua anomali citra dan teks tanpa luput satu pun.", color: "text-emerald-300 border-2 border-emerald-500 bg-emerald-950/30 glow-emerald" };
+  if (score >= 8) return { title: "Detektif Halusinasi Senior", desc: "Sangat jeli melihat keganjilan piksel dan teks, sanggup mendeteksi rekayasa KA dengan baik.", color: "text-green-300 border-2 border-green-600 bg-green-950/30" };
+  if (score >= 4) return { title: "Penyelidik Siber Magang", desc: "Kejelian Anda cukup baik, namun masih sering terkecoh oleh detail kecil rekayasa KA.", color: "text-teal-300 border-2 border-teal-600 bg-teal-950/30" };
+  return { title: "Piksel Kabur (Detektif Amatir)", desc: "Anda masih perlu melatih kejelian mata dan lebih kritis dalam mengamati detail citra dan teks digital.", color: "text-rose-400 border-2 border-rose-800 bg-rose-950/30 glow-rose" };
 };
 
 export const useGameState = () => {
   const [state, setState] = useState<GameState>({
     pageView: 'splash',
+    gameMode: null,
     currentLevelIndex: 0,
     score: 0,
     answers: [],
@@ -29,6 +30,7 @@ export const useGameState = () => {
     playSynthesizerNote('success');
     setState({
       pageView: 'game',
+      gameMode: null,
       currentLevelIndex: 0,
       score: 0,
       answers: [],
@@ -160,6 +162,7 @@ export const useGameState = () => {
     playSynthesizerNote('success');
     setState({
       pageView: 'splash',
+      gameMode: null,
       currentLevelIndex: 0,
       score: 0,
       answers: [],
@@ -173,9 +176,11 @@ export const useGameState = () => {
 
   return {
     pageView: state.pageView,
+    gameMode: state.gameMode,
     currentLevelIndex: state.currentLevelIndex,
     activeLevel,
     totalLevels: CAMPAIGN_LEVELS.length,
+    levelsForMode: CAMPAIGN_LEVELS,
     score: state.score,
     answers: state.answers,
     showFeedback: state.showFeedback,

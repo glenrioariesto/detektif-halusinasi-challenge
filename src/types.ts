@@ -39,6 +39,7 @@ export interface MissClick {
 
 export interface GameState {
   pageView: 'splash' | 'game' | 'result';
+  gameMode: 'image' | 'text' | null;
   currentLevelIndex: number;
   score: number;
   answers: UserLevelAnswer[];
