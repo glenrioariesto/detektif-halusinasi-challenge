@@ -23,18 +23,10 @@ export function ResultPage({ score, answers, onRestart, getRank, levels }: Resul
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-green-500/5 rounded-full blur-[120px] pointer-events-none"></div>
 
       <div className="z-10 max-w-3xl w-full flex flex-col items-center select-none animate-fadeIn">
-        {/* Victory Icon Badge */}
-        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#091509] border-2 border-emerald-500 flex items-center justify-center mb-2 sm:mb-3 glow-emerald shrink-0">
-          <Award className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-emerald-400" />
-        </div>
-
         {/* Headings */}
-        <h2 className="text-lg sm:text-xl md:text-2xl font-extrabold font-display mb-0.5 text-center uppercase tracking-wide text-emerald-100 shrink-0">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-extrabold font-display mb-3 sm:mb-4 text-center uppercase tracking-wide text-emerald-100 shrink-0">
           Evaluasi Laporan Investigasi
         </h2>
-        <p className="text-[8px] sm:text-[9px] font-mono text-emerald-500 uppercase tracking-widest mb-3 sm:mb-4 font-bold shrink-0">
-          Kampanye Misi #HAL-102-FULL Selesai Dievaluasi
-        </p>
 
         {/* Score & Rank Dashboard Card (Side-by-side columns on all screens) */}
         <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full mb-4 sm:mb-6 shrink-0">
