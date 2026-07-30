@@ -20,6 +20,7 @@ export const useGameState = () => {
     showFeedback: false,
     attempts: 0,
     foundHotspot: false,
+    foundHotspotIndices: [],
     selectedSegmentIndex: null,
     missClicks: [],
   });
@@ -49,8 +50,11 @@ export const useGameState = () => {
     const targetHotspots = activeLevel.hotspots || (activeLevel.hotspot ? [activeLevel.hotspot] : []);
     if (targetHotspots.length === 0) return;
 
-    // Check if click hits ANY hotspot in the list
-    const isHit = targetHotspots.some(hs => {
+    // Find which hotspot index is hit
+    const foundIndices = state.foundHotspotIndices || [];
+    const hitIndex = targetHotspots.findIndex((hs, idx) => {
+      if (foundIndices.includes(idx)) return false; // Already found
+
       const rx = hs.radiusX !== undefined ? hs.radiusX : hs.radius;
       const ry = hs.radiusY !== undefined ? hs.radiusY : hs.radius;
       const rotRad = ((hs.rotation || 0) * Math.PI) / 180;
@@ -65,9 +69,12 @@ export const useGameState = () => {
       return hitValue <= 1;
     });
 
-    if (isHit) {
-      // Correct click (hit!)
+    if (hitIndex !== -1) {
+      // Correct click (hit new hotspot!)
       playSynthesizerNote('success');
+      const updatedFoundIndices = [...foundIndices, hitIndex];
+      const isAllHotspotsFound = updatedFoundIndices.length >= targetHotspots.length;
+
       const newAnswer: UserLevelAnswer = {
         levelId: activeLevel.id,
         isCorrect: true,
@@ -77,10 +84,11 @@ export const useGameState = () => {
       
       setState(prev => ({
         ...prev,
+        foundHotspotIndices: updatedFoundIndices,
         answers: [...prev.answers, newAnswer],
         score: prev.score + 1,
-        showFeedback: true,
-        foundHotspot: true
+        showFeedback: isAllHotspotsFound,
+        foundHotspot: isAllHotspotsFound
       }));
     } else {
       // Incorrect click (miss!)
@@ -158,6 +166,7 @@ export const useGameState = () => {
         showFeedback: false,
         attempts: 0,
         foundHotspot: false,
+        foundHotspotIndices: [],
         selectedSegmentIndex: null,
         missClicks: []
       }));
@@ -168,6 +177,7 @@ export const useGameState = () => {
         showFeedback: false,
         attempts: 0,
         foundHotspot: false,
+        foundHotspotIndices: [],
         selectedSegmentIndex: null,
         missClicks: []
       }));
@@ -185,6 +195,7 @@ export const useGameState = () => {
       showFeedback: false,
       attempts: 0,
       foundHotspot: false,
+      foundHotspotIndices: [],
       selectedSegmentIndex: null,
       missClicks: [],
     });
@@ -202,6 +213,7 @@ export const useGameState = () => {
     showFeedback: state.showFeedback,
     attempts: state.attempts,
     foundHotspot: state.foundHotspot,
+    foundHotspotIndices: state.foundHotspotIndices,
     selectedSegmentIndex: state.selectedSegmentIndex,
     missClicks: state.missClicks,
     startInvestigation,

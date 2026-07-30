@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { ArrowLeft, CheckCircle2, Search, ArrowRight, HelpCircle, X, ShieldAlert, Award, Grid, Wrench } from 'lucide-react';
-import type { Level, MissClick } from '../../types';
+import type { Level, MissClick, Hotspot } from '../../types';
 import { InteractiveImage } from '../../components/InteractiveImage';
+import arenaBg from '../../assets/arena_bg.jpg';
 
 interface ArenaPageProps {
   currentLevelIndex: number;
@@ -11,6 +12,7 @@ interface ArenaPageProps {
   score: number;
   attempts: number;
   foundHotspot: boolean;
+  foundHotspotIndices: number[];
   selectedSegmentIndex: number | null;
   missClicks: MissClick[];
   onImageClick: (x: number, y: number) => void;
@@ -26,6 +28,7 @@ export function ArenaPage({
   showFeedback,
   score,
   attempts,
+  foundHotspotIndices = [],
   selectedSegmentIndex,
   missClicks,
   onImageClick,
@@ -38,6 +41,10 @@ export function ArenaPage({
   const [showGrid, setShowGrid] = useState(false);
   const [devShowHotspot, setDevShowHotspot] = useState(false);
 
+  // Hidden DEV mode toggle via secret click counter
+  const [devUnlocked, setDevUnlocked] = useState(false);
+  const [secretClickCount, setSecretClickCount] = useState(0);
+
   // Dedicated reactive state for DEV hotspot adjustments
   const [activeHotspotIndex, setActiveHotspotIndex] = useState(0);
   const [devHotspot, setDevHotspot] = useState(activeLevel.hotspot);
@@ -45,6 +52,15 @@ export function ArenaPage({
   // Normalize hotspots list
   const currentHotspots = activeLevel.hotspots || (activeLevel.hotspot ? [activeLevel.hotspot] : []);
   const currentTargetHotspot = currentHotspots[activeHotspotIndex] || currentHotspots[0];
+
+  const handleSecretScoreClick = () => {
+    const nextCount = secretClickCount + 1;
+    setSecretClickCount(nextCount);
+    if (nextCount >= 3) {
+      setDevUnlocked(true);
+      setDevShowHotspot(true);
+    }
+  };
 
   const updateHotspot = (key: keyof Hotspot, val: number) => {
     if (!currentTargetHotspot) return;
@@ -91,8 +107,16 @@ export function ArenaPage({
   };
 
   return (
-    <div className="h-screen w-screen bg-[#070514] text-emerald-100 flex items-center justify-center overflow-hidden relative select-none font-mono">
+    <div className="h-screen w-screen bg-[#020502] text-emerald-100 flex items-center justify-center overflow-hidden relative select-none font-mono">
       
+      {/* Background Image with Dark Cyberpunk Atmosphere Overlay */}
+      <img
+        src={arenaBg}
+        alt="Latar Belakang Ruang Investigasi"
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-75 filter brightness-90 contrast-110 pointer-events-none"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/70 z-1 pointer-events-none"></div>
+
       {/* Immersive Game UI stretching to landscape screen bounds */}
       <div className="relative w-full h-full z-10 flex flex-col">
         
@@ -108,7 +132,7 @@ export function ArenaPage({
 
         {/* HUD: Top-Right Score Badge & DEV Mode Button */}
         <div className="absolute top-4 right-4 z-30 flex items-center gap-2">
-          {activeLevel.type === 'image' && (
+          {devUnlocked && activeLevel.type === 'image' && (
             <button
               type="button"
               onClick={() => setDevShowHotspot(!devShowHotspot)}
@@ -124,7 +148,11 @@ export function ArenaPage({
             </button>
           )}
 
-          <div className="px-3.5 py-2 bg-black/60 backdrop-blur-md border-2 border-emerald-900/60 rounded-2xl flex items-center gap-2 text-xs font-bold text-emerald-300 shadow-md">
+          <div 
+            onClick={handleSecretScoreClick}
+            className="px-3.5 py-2 bg-black/60 backdrop-blur-md border-2 border-emerald-900/60 rounded-2xl flex items-center gap-2 text-xs font-bold text-emerald-300 shadow-md cursor-pointer hover:border-emerald-500/80 transition-colors"
+            title="Skor Investigasi (Klik 3x untuk Opsi Pengembang)"
+          >
             <Award className="w-4 h-4 text-emerald-400" />
             <span>Skor: {score}</span>
           </div>
@@ -157,8 +185,13 @@ export function ArenaPage({
         )}
 
         {/* HUD: Bottom-Right Level Title Info Badge */}
-        <div className="absolute bottom-4 right-4 z-30 px-3.5 py-1.5 bg-black/60 backdrop-blur-md border-2 border-emerald-900/60 rounded-xl text-[10px] sm:text-xs text-emerald-400 font-bold shadow-md">
-          Kasus {currentLevelIndex + 1} dari {totalLevels}: {activeLevel.title}
+        <div className="absolute bottom-4 right-4 z-30 px-3.5 py-1.5 bg-black/60 backdrop-blur-md border-2 border-emerald-900/60 rounded-xl text-[10px] sm:text-xs text-emerald-400 font-bold shadow-md flex items-center gap-2">
+          <span>Kasus {currentLevelIndex + 1} dari {totalLevels}: {activeLevel.title}</span>
+          {activeLevel.type === 'image' && (
+            <span className="px-2 py-0.5 bg-emerald-950 border border-emerald-500/40 text-emerald-300 text-[9px] rounded-full font-mono">
+              🎯 {(foundHotspotIndices || []).length} / {currentHotspots.length} Anomali
+            </span>
+          )}
         </div>
 
         {/* HUD: DEV HOTSPOT CONTROL PANEL TOOLBAR */}
@@ -370,6 +403,7 @@ export function ArenaPage({
                 alt={activeLevel.title}
                 hotspot={activeLevel.hotspot}
                 hotspots={activeLevel.hotspots}
+                foundHotspotIndices={foundHotspotIndices}
                 found={showFeedback}
                 missClicks={missClicks}
                 onClick={onImageClick}

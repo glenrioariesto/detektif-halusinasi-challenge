@@ -17,6 +17,7 @@ export default function App() {
     showFeedback,
     attempts,
     foundHotspot,
+    foundHotspotIndices,
     selectedSegmentIndex,
     missClicks,
     startInvestigation,
@@ -46,6 +47,7 @@ export default function App() {
           score={score}
           attempts={attempts}
           foundHotspot={foundHotspot}
+          foundHotspotIndices={foundHotspotIndices}
           selectedSegmentIndex={selectedSegmentIndex}
           missClicks={missClicks}
           onImageClick={handleImageClick}

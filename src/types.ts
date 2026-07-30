@@ -51,6 +51,7 @@ export interface GameState {
   showFeedback: boolean;
   attempts: number;
   foundHotspot: boolean;
+  foundHotspotIndices: number[];
   selectedSegmentIndex: number | null;
   missClicks: MissClick[];
 }

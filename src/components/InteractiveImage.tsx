@@ -7,6 +7,7 @@ interface InteractiveImageProps {
   alt: string;
   hotspot?: Hotspot;
   hotspots?: Hotspot[];
+  foundHotspotIndices?: number[];
   found: boolean;
   missClicks: MissClick[];
   onClick: (x: number, y: number) => void;
@@ -21,6 +22,7 @@ export function InteractiveImage({
   alt,
   hotspot,
   hotspots,
+  foundHotspotIndices = [],
   found,
   missClicks,
   onClick,
@@ -245,34 +247,39 @@ export function InteractiveImage({
         </>
       )}
 
-      {/* RENDER ALL HOTSPOTS ONCE FOUND */}
-      {found && allHotspots.length > 0 && imgLoaded && (
+      {/* RENDER HOTSPOTS AS THEY ARE DISCOVERED */}
+      {allHotspots.length > 0 && imgLoaded && (
         <>
-          {allHotspots.map((hs, index) => (
-            <div
-              key={`reveal-hs-${index}`}
-              className="absolute border-2 border-emerald-400 bg-emerald-500/10 shadow-[0_0_20px_rgba(52,211,153,0.5)] flex items-center justify-center animate-pulse"
-              style={{
-                left: `${hs.x}%`,
-                top: `${hs.y}%`,
-                width: `${(hs.radiusX !== undefined ? hs.radiusX : hs.radius) * 2}%`,
-                height: `${(hs.radiusY !== undefined ? hs.radiusY : hs.radius) * 2}%`,
-                borderRadius: `${hs.borderRadius !== undefined ? hs.borderRadius : 50}%`,
-                transform: `translate(-50%, -50%) rotate(${hs.rotation || 0}deg)`,
-                pointerEvents: 'none',
-                zIndex: 30,
-              }}
-            >
-              {/* Target Scanner Crosshair */}
-              <div className="absolute w-full h-0.5 bg-emerald-400/40"></div>
-              <div className="absolute h-full w-0.5 bg-emerald-400/40"></div>
-              
-              {/* Small badge */}
-              <div className="bg-slate-900/90 border border-emerald-400 text-emerald-400 font-mono text-[9px] px-1.5 py-0.5 rounded shadow absolute top-full mt-2 whitespace-nowrap">
-                {hs.label}
+          {allHotspots.map((hs, index) => {
+            const isFound = found || foundHotspotIndices.includes(index);
+            if (!isFound) return null;
+
+            return (
+              <div
+                key={`reveal-hs-${index}`}
+                className="absolute border-2 border-emerald-400 bg-emerald-500/10 shadow-[0_0_20px_rgba(52,211,153,0.5)] flex items-center justify-center animate-pulse"
+                style={{
+                  left: `${hs.x}%`,
+                  top: `${hs.y}%`,
+                  width: `${(hs.radiusX !== undefined ? hs.radiusX : hs.radius) * 2}%`,
+                  height: `${(hs.radiusY !== undefined ? hs.radiusY : hs.radius) * 2}%`,
+                  borderRadius: `${hs.borderRadius !== undefined ? hs.borderRadius : 50}%`,
+                  transform: `translate(-50%, -50%) rotate(${hs.rotation || 0}deg)`,
+                  pointerEvents: 'none',
+                  zIndex: 30,
+                }}
+              >
+                {/* Target Scanner Crosshair */}
+                <div className="absolute w-full h-0.5 bg-emerald-400/40"></div>
+                <div className="absolute h-full w-0.5 bg-emerald-400/40"></div>
+                
+                {/* Small badge */}
+                <div className="bg-slate-900/90 border border-emerald-400 text-emerald-400 font-mono text-[9px] px-1.5 py-0.5 rounded shadow absolute top-full mt-2 whitespace-nowrap">
+                  {hs.label}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </>
       )}
 
