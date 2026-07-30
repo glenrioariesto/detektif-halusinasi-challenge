@@ -13,7 +13,7 @@ interface Particle {
 
 export function InteractiveGridBg() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const mouseRef = useRef({ x: -1000, y: -1000, targetX: -1000, targetY: -1000 });
+  const mouseRef = useRef({ x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false });
   const particlesRef = useRef<Particle[]>([]);
   const rippleRef = useRef({ x: 0, y: 0, radius: 0, active: false });
 
@@ -21,16 +21,34 @@ export function InteractiveGridBg() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    const parent = canvas.parentElement;
+    if (!parent) return;
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     let animationFrameId: number;
 
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const rect = parent.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
 
-      // Initialize 130 glowing dust particles using emerald/lime green colors
+      // Detect if user is on mobile/tablet/iPad touch screen or small device
+      const isTouchOrMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 1024;
+
+      // On initial load for mobile/iPad, place 1 active target point shifted further right (85% width)
+      if (isTouchOrMobile && !mouseRef.current.active) {
+        const pointX = rect.width * 0.85;
+        const pointY = rect.height * 0.5;
+        mouseRef.current.targetX = pointX;
+        mouseRef.current.targetY = pointY;
+        mouseRef.current.x = pointX;
+        mouseRef.current.y = pointY;
+        mouseRef.current.active = true;
+      }
+
+      // Initialize 80 glowing dust particles inside the card
       const arr: Particle[] = [];
       const colors = [
         'rgba(16, 185, 129, 0.45)', // Emerald
@@ -39,7 +57,7 @@ export function InteractiveGridBg() {
         'rgba(5, 150, 105, 0.45)'   // Dark Emerald
       ];
       
-      for (let i = 0; i < 130; i++) {
+      for (let i = 0; i < 80; i++) {
         arr.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
@@ -58,38 +76,71 @@ export function InteractiveGridBg() {
     resizeCanvas();
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current.targetX = e.clientX;
-      mouseRef.current.targetY = e.clientY;
+      const rect = parent.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Check if mouse is strictly inside the card boundaries
+      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+        mouseRef.current.targetX = x;
+        mouseRef.current.targetY = y;
+        mouseRef.current.active = true;
+      } else {
+        mouseRef.current.active = false;
+        mouseRef.current.targetX = -1000;
+        mouseRef.current.targetY = -1000;
+      }
+    };
+
+    const handleMouseLeave = () => {
+      mouseRef.current.active = false;
+      mouseRef.current.targetX = -1000;
+      mouseRef.current.targetY = -1000;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
       if (e.touches.length > 0) {
-        mouseRef.current.targetX = e.touches[0].clientX;
-        mouseRef.current.targetY = e.touches[0].clientY;
+        const rect = parent.getBoundingClientRect();
+        const x = e.touches[0].clientX - rect.left;
+        const y = e.touches[0].clientY - rect.top;
+
+        if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+          mouseRef.current.targetX = x;
+          mouseRef.current.targetY = y;
+          mouseRef.current.active = true;
+        } else {
+          mouseRef.current.active = false;
+        }
       }
     };
 
     const handleClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('button') || target.closest('a')) return;
+      const rect = parent.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-      // Activate shockwave ripple push
-      rippleRef.current = {
-        x: e.clientX,
-        y: e.clientY,
-        radius: 10,
-        active: true
-      };
+      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+        const target = e.target as HTMLElement;
+        if (target.closest('button') || target.closest('a')) return;
+
+        // Activate shockwave ripple push relative to card coordinates
+        rippleRef.current = {
+          x,
+          y,
+          radius: 10,
+          active: true
+        };
+      }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('touchmove', handleTouchMove);
-    window.addEventListener('click', handleClick);
+    parent.addEventListener('mousemove', handleMouseMove);
+    parent.addEventListener('mouseleave', handleMouseLeave);
+    parent.addEventListener('touchmove', handleTouchMove);
+    parent.addEventListener('click', handleClick);
 
     const draw = () => {
-      // Semi-transparent trailing background for a fluid motion blur effect, matching body color #040804
-      ctx.fillStyle = 'rgba(4, 8, 4, 0.15)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Clear canvas every frame with 100% full transparency
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const mouse = mouseRef.current;
       if (mouse.x === -1000) {
@@ -206,9 +257,10 @@ export function InteractiveGridBg() {
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('click', handleClick);
+      parent.removeEventListener('mousemove', handleMouseMove);
+      parent.removeEventListener('mouseleave', handleMouseLeave);
+      parent.removeEventListener('touchmove', handleTouchMove);
+      parent.removeEventListener('click', handleClick);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
