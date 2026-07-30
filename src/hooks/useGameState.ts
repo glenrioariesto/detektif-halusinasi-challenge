@@ -43,13 +43,29 @@ export const useGameState = () => {
   };
 
   const handleImageClick = (x: number, y: number) => {
-    if (state.showFeedback || activeLevel.type !== 'image' || !activeLevel.hotspot) return;
+    if (state.showFeedback || activeLevel.type !== 'image') return;
 
-    const hs = activeLevel.hotspot;
-    // Calculate Euclidean distance in percentage coordinate system
-    const distance = Math.sqrt(Math.pow(x - hs.x, 2) + Math.pow(y - hs.y, 2));
+    // Collect all hotspots for current level
+    const targetHotspots = activeLevel.hotspots || (activeLevel.hotspot ? [activeLevel.hotspot] : []);
+    if (targetHotspots.length === 0) return;
 
-    if (distance <= hs.radius) {
+    // Check if click hits ANY hotspot in the list
+    const isHit = targetHotspots.some(hs => {
+      const rx = hs.radiusX !== undefined ? hs.radiusX : hs.radius;
+      const ry = hs.radiusY !== undefined ? hs.radiusY : hs.radius;
+      const rotRad = ((hs.rotation || 0) * Math.PI) / 180;
+
+      const dx = x - hs.x;
+      const dy = y - hs.y;
+
+      const rotatedX = dx * Math.cos(-rotRad) - dy * Math.sin(-rotRad);
+      const rotatedY = dx * Math.sin(-rotRad) + dy * Math.cos(-rotRad);
+
+      const hitValue = Math.pow(rotatedX / rx, 2) + Math.pow(rotatedY / ry, 2);
+      return hitValue <= 1;
+    });
+
+    if (isHit) {
       // Correct click (hit!)
       playSynthesizerNote('success');
       const newAnswer: UserLevelAnswer = {

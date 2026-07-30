@@ -6,22 +6,28 @@ interface InteractiveImageProps {
   src: string;
   alt: string;
   hotspot?: Hotspot;
+  hotspots?: Hotspot[];
   found: boolean;
   missClicks: MissClick[];
   onClick: (x: number, y: number) => void;
   disabled: boolean;
   showGrid: boolean;
+  devShowHotspot?: boolean;
+  activeHotspotIndex?: number;
 }
 
 export function InteractiveImage({
   src,
   alt,
   hotspot,
+  hotspots,
   found,
   missClicks,
   onClick,
   disabled,
-  showGrid
+  showGrid,
+  devShowHotspot,
+  activeHotspotIndex = 0
 }: InteractiveImageProps) {
   const [lensState, setLensState] = useState({
     show: false,
@@ -33,6 +39,9 @@ export function InteractiveImage({
   const containerRef = useRef<HTMLButtonElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const [imgLoaded, setImgLoaded] = useState(false);
+
+  // Normalize hotspots list
+  const allHotspots = hotspots || (hotspot ? [hotspot] : []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>) => {
     if (!containerRef.current || !imgRef.current || !imgLoaded || disabled || found) return;
@@ -113,7 +122,7 @@ export function InteractiveImage({
     <button
       ref={containerRef}
       type="button"
-      className="relative w-full max-w-2xl aspect-[16/10] bg-[#020502]/80 border border-emerald-900 rounded-2xl overflow-hidden flex items-center justify-center cursor-crosshair mx-auto select-none text-left shadow-2xl"
+      className="relative inline-block w-auto max-w-[85vw] sm:max-w-md md:max-w-xl max-h-[65vh] sm:max-h-[75vh] bg-[#020502]/80 border border-emerald-900 rounded-2xl overflow-hidden cursor-crosshair mx-auto select-none text-left shadow-2xl shrink-0 p-0"
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -123,8 +132,6 @@ export function InteractiveImage({
       onClick={handleImageClick}
       aria-label={`Analisis gambar ${alt} untuk mencari anomali`}
     >
-
-
       {/* Zoom indicator tag */}
       {!found && !disabled && (
         <div className="absolute top-4 right-4 z-10 bg-slate-900/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-slate-700/60 text-slate-400 text-[10px] font-mono flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
@@ -138,7 +145,7 @@ export function InteractiveImage({
         ref={imgRef}
         src={src}
         alt={alt}
-        className="w-full h-full object-fill transition-all duration-300 rounded-2xl"
+        className="w-auto h-auto max-w-[85vw] sm:max-w-md md:max-w-xl max-h-[65vh] sm:max-h-[75vh] block object-cover transition-all duration-300 rounded-2xl"
         onLoad={() => setImgLoaded(true)}
         style={{ opacity: imgLoaded ? 1 : 0 }}
       />
@@ -199,29 +206,74 @@ export function InteractiveImage({
         </div>
       )}
 
-      {/* RENDER HOTSPOT ONCE FOUND */}
-      {found && hotspot && imgLoaded && (
-        <div
-          className="absolute rounded-full border-2 border-emerald-400 bg-emerald-500/10 shadow-[0_0_20px_rgba(52,211,153,0.5)] flex items-center justify-center animate-pulse"
-          style={{
-            left: `${hotspot.x}%`,
-            top: `${hotspot.y}%`,
-            width: `${hotspot.radius * 2}%`,
-            height: `${hotspot.radius * 2}%`,
-            transform: 'translate(-50%, -50%)',
-            pointerEvents: 'none',
-            zIndex: 30,
-          }}
-        >
-          {/* Target Scanner Crosshair */}
-          <div className="absolute w-full h-0.5 bg-emerald-400/40"></div>
-          <div className="absolute h-full w-0.5 bg-emerald-400/40"></div>
-          
-          {/* Small badge */}
-          <div className="bg-slate-900/90 border border-emerald-400 text-emerald-400 font-mono text-[9px] px-1.5 py-0.5 rounded shadow absolute top-full mt-2 whitespace-nowrap">
-            {hotspot.label}
-          </div>
-        </div>
+      {/* DEV MODE HOTSPOT INDICATORS FOR ALL HOTSPOTS */}
+      {devShowHotspot && allHotspots.length > 0 && imgLoaded && !found && (
+        <>
+          {allHotspots.map((hs, index) => {
+            const isActive = index === activeHotspotIndex;
+            return (
+              <div
+                key={`dev-hs-${index}`}
+                className={`absolute border-2 transition-colors pointer-events-none z-35 ${
+                  isActive 
+                    ? 'border-amber-400 bg-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.6)]' 
+                    : 'border-amber-600/60 bg-amber-900/15'
+                }`}
+                style={{
+                  left: `${hs.x}%`,
+                  top: `${hs.y}%`,
+                  width: `${(hs.radiusX !== undefined ? hs.radiusX : hs.radius) * 2}%`,
+                  height: `${(hs.radiusY !== undefined ? hs.radiusY : hs.radius) * 2}%`,
+                  borderRadius: `${hs.borderRadius !== undefined ? hs.borderRadius : 50}%`,
+                  transform: `translate(-50%, -50%) rotate(${hs.rotation || 0}deg)`,
+                }}
+              >
+                {/* Center pointer dot */}
+                <div className={`w-2.5 h-2.5 rounded-full ${isActive ? 'bg-amber-300 shadow-[0_0_8px_#f59e0b]' : 'bg-amber-600'}`}></div>
+                {/* Rotation Direction Arrow Indicator */}
+                <div className="absolute top-0 w-0.5 h-1/2 bg-amber-400/80 origin-bottom"></div>
+                
+                {/* Small label badge */}
+                <div className={`border text-[9px] px-1.5 py-0.5 rounded absolute bottom-full mb-1 whitespace-nowrap font-bold shadow-md ${
+                  isActive ? 'bg-amber-950/95 border-amber-400 text-amber-300' : 'bg-black/80 border-amber-800 text-amber-500'
+                }`}>
+                  #{index + 1}: {hs.label}
+                </div>
+              </div>
+            );
+          })}
+        </>
+      )}
+
+      {/* RENDER ALL HOTSPOTS ONCE FOUND */}
+      {found && allHotspots.length > 0 && imgLoaded && (
+        <>
+          {allHotspots.map((hs, index) => (
+            <div
+              key={`reveal-hs-${index}`}
+              className="absolute border-2 border-emerald-400 bg-emerald-500/10 shadow-[0_0_20px_rgba(52,211,153,0.5)] flex items-center justify-center animate-pulse"
+              style={{
+                left: `${hs.x}%`,
+                top: `${hs.y}%`,
+                width: `${(hs.radiusX !== undefined ? hs.radiusX : hs.radius) * 2}%`,
+                height: `${(hs.radiusY !== undefined ? hs.radiusY : hs.radius) * 2}%`,
+                borderRadius: `${hs.borderRadius !== undefined ? hs.borderRadius : 50}%`,
+                transform: `translate(-50%, -50%) rotate(${hs.rotation || 0}deg)`,
+                pointerEvents: 'none',
+                zIndex: 30,
+              }}
+            >
+              {/* Target Scanner Crosshair */}
+              <div className="absolute w-full h-0.5 bg-emerald-400/40"></div>
+              <div className="absolute h-full w-0.5 bg-emerald-400/40"></div>
+              
+              {/* Small badge */}
+              <div className="bg-slate-900/90 border border-emerald-400 text-emerald-400 font-mono text-[9px] px-1.5 py-0.5 rounded shadow absolute top-full mt-2 whitespace-nowrap">
+                {hs.label}
+              </div>
+            </div>
+          ))}
+        </>
       )}
 
       {/* RENDER MISS CLICKS */}

@@ -1,8 +1,12 @@
 export interface Hotspot {
-  x: number;      // percentage X (0-100) relative to image width
-  y: number;      // percentage Y (0-100) relative to image height
-  radius: number; // click tolerance radius in percentage
-  label: string;  // name of the anomaly (e.g. "Jari Keenam")
+  x: number;          // percentage X (0-100) relative to image width
+  y: number;          // percentage Y (0-100) relative to image height
+  radius: number;     // legacy/fallback click tolerance radius in percentage
+  radiusX?: number;   // horizontal radius in percentage
+  radiusY?: number;   // vertical radius in percentage
+  borderRadius?: number; // border radius percentage (0 = square, 50 = pill/circle)
+  label: string;      // name of the anomaly (e.g. "Jari Keenam")
+  rotation?: number;  // rotation in degrees
 }
 
 export interface Level {
@@ -16,7 +20,8 @@ export interface Level {
   
   // Image level properties
   imageUrl?: string;
-  hotspot?: Hotspot;
+  hotspot?: Hotspot;      // Single hotspot (backward compatible)
+  hotspots?: Hotspot[];   // Multiple hotspots (any hit counts as success)
 
   // Text level properties
   textSegments?: string[];
