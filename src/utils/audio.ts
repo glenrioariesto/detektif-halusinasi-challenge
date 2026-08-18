@@ -1,10 +1,9 @@
-// Web Audio API Sound & Background Music Engine for Detektif Halusinasi
-// 100% Offline-First, Lightweight, Zero-CDN dependency
+// Sound and Background Music Engine for Detektif Halusinasi
+import backsoundUrl from '../assets/backsound.mp3';
 
 let audioCtx: AudioContext | null = null;
-let bgmGainNode: GainNode | null = null;
-let bgmTimer: number | null = null;
-let isBgmRunning = false;
+let bgmAudio: HTMLAudioElement | null = null;
+let isBgmInitialized = false;
 
 // Persisted mute state
 let isMuted = false;
@@ -28,6 +27,17 @@ const getAudioContext = (): AudioContext | null => {
   return audioCtx;
 };
 
+const getBgmAudio = (): HTMLAudioElement | null => {
+  if (typeof window === 'undefined') return null;
+  if (!bgmAudio) {
+    bgmAudio = new Audio(backsoundUrl);
+    bgmAudio.loop = true;
+    bgmAudio.volume = 0.35;
+    bgmAudio.muted = isMuted;
+  }
+  return bgmAudio;
+};
+
 export const getIsMuted = (): boolean => isMuted;
 
 export const setMuted = (muted: boolean): boolean => {
@@ -36,8 +46,12 @@ export const setMuted = (muted: boolean): boolean => {
     localStorage.setItem('detektif_audio_muted', muted ? 'true' : 'false');
   } catch {}
 
-  if (bgmGainNode && audioCtx) {
-    bgmGainNode.gain.setValueAtTime(isMuted ? 0 : 0.05, audioCtx.currentTime);
+  const bgm = getBgmAudio();
+  if (bgm) {
+    bgm.muted = isMuted;
+    if (!isMuted && bgm.paused) {
+      bgm.play().catch(() => {});
+    }
   }
   return isMuted;
 };
@@ -46,116 +60,40 @@ export const toggleMute = (): boolean => {
   return setMuted(!isMuted);
 };
 
-// Procedural Ambient Cyber-Detective Investigation Music Engine
 export const startBGM = () => {
-  if (isBgmRunning) return;
-  const ctx = getAudioContext();
-  if (!ctx) return;
+  const bgm = getBgmAudio();
+  if (!bgm) return;
 
-  isBgmRunning = true;
-
-  // Master BGM gain
-  bgmGainNode = ctx.createGain();
-  bgmGainNode.gain.setValueAtTime(isMuted ? 0 : 0.05, ctx.currentTime);
-  bgmGainNode.connect(ctx.destination);
-
-  // Minor investigation chord progression (Dm, Bb, F, C) frequencies (Hz)
-  const chords = [
-    [146.83, 220.00, 261.63, 349.23], // Dm (D3, A3, C4, F4)
-    [116.54, 174.61, 233.08, 293.66], // Bb (Bb2, F3, Bb3, D4)
-    [130.81, 196.00, 261.63, 329.63], // C (C3, G3, C4, E4)
-    [110.00, 164.81, 220.00, 261.63], // Am (A2, E3, A3, C4)
-  ];
-
-  let chordIndex = 0;
-
-  const playAmbientAtmosphere = () => {
-    if (!isBgmRunning || !audioCtx || !bgmGainNode) return;
-
-    try {
-      const now = audioCtx.currentTime;
-      const chord = chords[chordIndex % chords.length];
-      chordIndex++;
-
-      // 1. Warm ambient pad drone with lowpass filter
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(380, now);
-      filter.Q.setValueAtTime(1.5, now);
-      filter.connect(bgmGainNode);
-
-      chord.forEach((freq, i) => {
-        if (!audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const padGain = audioCtx.createGain();
-
-        osc.type = i === 0 ? 'sine' : 'triangle';
-        osc.frequency.setValueAtTime(freq, now);
-
-        // Slow soft swell
-        padGain.gain.setValueAtTime(0, now);
-        padGain.gain.linearRampToValueAtTime(0.04 / (i + 1), now + 1.2);
-        padGain.gain.exponentialRampToValueAtTime(0.001, now + 4.8);
-
-        osc.connect(padGain);
-        padGain.connect(filter);
-
-        osc.start(now);
-        osc.stop(now + 5.0);
-      });
-
-      // 2. Subtle Detective Sub-bass pulse
-      const subOsc = audioCtx.createOscillator();
-      const subGain = audioCtx.createGain();
-      subOsc.type = 'sine';
-      subOsc.frequency.setValueAtTime(chord[0] / 2, now); // Low fundamental
-      subGain.gain.setValueAtTime(0.06, now);
-      subGain.gain.exponentialRampToValueAtTime(0.001, now + 2.2);
-
-      subOsc.connect(subGain);
-      subGain.connect(bgmGainNode);
-      subOsc.start(now);
-      subOsc.stop(now + 2.4);
-
-      // 3. Gentle Cyber Radar Ping / Bell
-      const pingOsc = audioCtx.createOscillator();
-      const pingGain = audioCtx.createGain();
-      pingOsc.type = 'sine';
-      // Pick random harmonic note
-      const pingNotes = [587.33, 659.25, 880.00, 1046.50]; // D5, E5, A5, C6
-      const pingFreq = pingNotes[Math.floor(Math.random() * pingNotes.length)];
-      pingOsc.frequency.setValueAtTime(pingFreq, now + 1.0);
-
-      pingGain.gain.setValueAtTime(0, now);
-      pingGain.gain.setValueAtTime(0.025, now + 1.0);
-      pingGain.gain.exponentialRampToValueAtTime(0.0005, now + 2.8);
-
-      pingOsc.connect(pingGain);
-      pingGain.connect(bgmGainNode);
-      pingOsc.start(now + 1.0);
-      pingOsc.stop(now + 3.0);
-
-    } catch (err) {
-      console.warn("BGM ambient loop tick error", err);
-    }
-  };
-
-  // Run first chord immediately
-  playAmbientAtmosphere();
-  // Loop smoothly every 4.6 seconds
-  bgmTimer = window.setInterval(playAmbientAtmosphere, 4600);
+  bgm.muted = isMuted;
+  if (bgm.paused && !isMuted) {
+    bgm.play().catch((err) => {
+      console.log('Autoplay policy waiting for user interaction:', err);
+    });
+  }
+  isBgmInitialized = true;
 };
 
 export const stopBGM = () => {
-  isBgmRunning = false;
-  if (bgmTimer !== null) {
-    clearInterval(bgmTimer);
-    bgmTimer = null;
-  }
-  if (bgmGainNode && audioCtx) {
-    bgmGainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+  const bgm = getBgmAudio();
+  if (bgm) {
+    bgm.pause();
   }
 };
+
+// Also attach a one-time user interaction listener so audio plays immediately when user clicks anywhere
+if (typeof window !== 'undefined') {
+  const handleFirstInteraction = () => {
+    if (!isMuted) {
+      startBGM();
+    }
+    window.removeEventListener('click', handleFirstInteraction);
+    window.removeEventListener('keydown', handleFirstInteraction);
+    window.removeEventListener('touchstart', handleFirstInteraction);
+  };
+  window.addEventListener('click', handleFirstInteraction);
+  window.addEventListener('keydown', handleFirstInteraction);
+  window.addEventListener('touchstart', handleFirstInteraction);
+}
 
 // Sound Effects for game interactions
 export const playSynthesizerNote = (type: 'success' | 'fail' | 'btn' | 'unlock') => {
