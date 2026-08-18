@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCircle2, ArrowRight, X, BookOpen, Target, ImageIcon, FileText, Award } from 'lucide-react';
+import { CheckCircle2, ArrowRight, X, BookOpen, Target, ImageIcon, FileText, Award, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import type { Level, MissClick } from '../../types';
 import { InteractiveImage } from '../../components/InteractiveImage';
 import arenaBg from '../../assets/background-gameplay.webp';
@@ -34,6 +34,7 @@ export function ArenaPage({
 }: ArenaPageProps) {
   
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [guideSlide, setGuideSlide] = useState(0);
 
   // Normalize hotspots list for current level
   const currentHotspots = activeLevel.hotspots || (activeLevel.hotspot ? [activeLevel.hotspot] : []);
@@ -57,7 +58,10 @@ export function ArenaPage({
         <button
           id="btn-open-guide"
           type="button"
-          onClick={() => setIsGuideOpen(true)}
+          onClick={() => {
+            setIsGuideOpen(true);
+            setGuideSlide(0);
+          }}
           className="absolute bottom-4 left-4 z-30 px-3.5 py-1.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#f0c400]/70 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm text-[#f0c400] hover:text-white font-title tracking-wider transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 glow-gold"
           title="Buka Panduan Cara Bermain"
         >
@@ -158,87 +162,134 @@ export function ArenaPage({
           )}
         </div>
 
-        {/* MODAL 1: GAMEPLAY GUIDE (PANDUAN CARA BERMAIN) */}
+        {/* MODAL 1: GAMEPLAY GUIDE (PANDUAN CARA BERMAIN MULTI-SLIDE) */}
         {isGuideOpen && (
           <div id="modal-gameplay-guide" className="absolute inset-0 bg-black/85 backdrop-blur-md z-45 flex items-center justify-center p-4 animate-fadeIn">
-            <div id="modal-guide-card" className="w-full max-w-lg bg-[#041a32] border-2 border-[#1f568d] rounded-2xl p-4 sm:p-6 shadow-[0_0_40px_rgba(31,86,141,0.5)] relative max-h-[88vh] overflow-y-auto flex flex-col text-[#e2eaf4]">
+            <div id="modal-guide-card" className="w-full max-w-lg bg-[#041a32] border-2 border-[#1f568d] rounded-2xl p-4 sm:p-5 shadow-[0_0_40px_rgba(31,86,141,0.5)] relative flex flex-col justify-between text-[#e2eaf4] select-none">
               <button
                 id="btn-close-guide-x"
                 type="button"
                 onClick={() => setIsGuideOpen(false)}
-                className="absolute top-4 right-4 text-[#8fabc6] hover:text-white transition-colors cursor-pointer z-10"
+                className="absolute top-3.5 right-3.5 text-[#8fabc6] hover:text-white transition-colors cursor-pointer z-10"
+                title="Tutup Panduan"
               >
                 <X className="w-5 h-5" />
               </button>
 
               {/* Modal Header */}
-              <div className="flex items-center gap-2.5 border-b border-[#0f3b66] pb-2.5 mb-4 shrink-0">
-                <BookOpen className="w-5 h-5 text-[#f0c400]" />
-                <h3 className="text-sm sm:text-base font-normal text-[#f0c400] uppercase tracking-wider font-title">
-                  Panduan Cara Bermain
-                </h3>
+              <div className="flex items-center justify-between border-b border-[#0f3b66] pb-2.5 mb-3 shrink-0 pr-8">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-[#f0c400]" />
+                  <h3 className="text-xs sm:text-sm font-normal text-[#f0c400] uppercase tracking-wider font-title">
+                    Panduan Cara Bermain
+                  </h3>
+                </div>
+                <span className="text-[10px] sm:text-xs text-[#8fabc6] font-title tracking-wider">
+                  Langkah {guideSlide + 1} dari 3
+                </span>
               </div>
 
-              {/* Guide Contents */}
-              <div className="space-y-3 mb-5 overflow-y-auto pr-1 text-xs leading-relaxed font-sans">
-                {/* Section 1: Objective */}
-                <div className="bg-[#062444]/60 border border-[#1f568d]/50 rounded-xl p-3">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <Target className="w-4 h-4 text-[#388ce0]" />
-                    <span className="font-title text-[#388ce0] uppercase tracking-wide text-xs">Misi Utama Penyelidik</span>
+              {/* Slide Body Content (Compact, No Scrolling on mobile) */}
+              <div className="min-h-[145px] sm:min-h-[155px] flex flex-col justify-center my-1">
+                {guideSlide === 0 && (
+                  <div className="bg-[#062444]/60 border border-[#1f568d]/50 rounded-xl p-3 sm:p-3.5 space-y-2 animate-fadeIn">
+                    <div className="flex items-center gap-2">
+                      <Target className="w-4 h-4 text-[#388ce0]" />
+                      <span className="font-title text-[#388ce0] uppercase tracking-wide text-xs sm:text-sm">1. Misi Utama Penyelidik</span>
+                    </div>
+                    <p className="text-[#c8d5e3] text-xs sm:text-sm leading-relaxed">
+                      Bongkar kejanggalan dan halusinasi buatan <strong>Kecerdasan Artifisial (KA)</strong> di 10 kasus digital (5 Kasus Gambar & 5 Kasus Dokumen Teks).
+                    </p>
+                    <div className="flex items-center gap-2 pt-1 border-t border-[#1f568d]/30 text-[#f0c400] text-[11px] sm:text-xs">
+                      <Award className="w-4 h-4 shrink-0" />
+                      <span>Raih akurasi 100% untuk gelar <strong>Mata Dewa (Detektif Legendaris)</strong>!</span>
+                    </div>
                   </div>
-                  <p className="text-[#c8d5e3] text-[11px] sm:text-xs">
-                    Identifikasi dan bongkar kejanggalan atau <strong>halusinasi buatan Kecerdasan Artifisial (KA)</strong> di setiap kasus untuk menguji kejelian literasi digital Anda.
-                  </p>
-                </div>
+                )}
 
-                {/* Section 2: Image Investigation */}
-                <div className="bg-[#062444]/60 border border-[#1f568d]/50 rounded-xl p-3">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <ImageIcon className="w-4 h-4 text-[#f0c400]" />
-                    <span className="font-title text-[#f0c400] uppercase tracking-wide text-xs">1. Investigasi Kasus Citra (Gambar)</span>
+                {guideSlide === 1 && (
+                  <div className="bg-[#062444]/60 border border-[#1f568d]/50 rounded-xl p-3 sm:p-3.5 space-y-2 animate-fadeIn">
+                    <div className="flex items-center gap-2">
+                      <ImageIcon className="w-4 h-4 text-[#f0c400]" />
+                      <span className="font-title text-[#f0c400] uppercase tracking-wide text-xs sm:text-sm">2. Investigasi Citra (Gambar)</span>
+                    </div>
+                    <ul className="text-[#c8d5e3] text-xs sm:text-sm space-y-1 list-disc list-inside">
+                      <li>Arahkan kursor atau sentuh layar untuk menggunakan <strong>kaca pembesar</strong>.</li>
+                      <li>Periksa jari ganda/melayang, huruf meleleh (<em>gibberish</em>), dan pantulan tidak sinkron.</li>
+                      <li><strong>Klik langsung pada titik anomali</strong> untuk mengunci bukti.</li>
+                    </ul>
                   </div>
-                  <ul className="text-[#c8d5e3] text-[11px] sm:text-xs list-disc list-inside space-y-1">
-                    <li>Arahkan kursor atau sentuh layar untuk menggunakan <strong>kaca pembesar</strong>.</li>
-                    <li>Perhatikan keganjilan jumlah jari tangan, teks/huruf meleleh (<em>gibberish</em>), pantulan cermin yang tidak sinkron, atau struktur fisik yang aneh.</li>
-                    <li><strong>Klik langsung pada titik anomali</strong> untuk mengunci bukti kesalahan KA.</li>
-                  </ul>
-                </div>
+                )}
 
-                {/* Section 3: Text Investigation */}
-                <div className="bg-[#062444]/60 border border-[#1f568d]/50 rounded-xl p-3">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <FileText className="w-4 h-4 text-[#388ce0]" />
-                    <span className="font-title text-[#388ce0] uppercase tracking-wide text-xs">2. Investigasi Kasus Dokumen (Teks)</span>
+                {guideSlide === 2 && (
+                  <div className="bg-[#062444]/60 border border-[#1f568d]/50 rounded-xl p-3 sm:p-3.5 space-y-2 animate-fadeIn">
+                    <div className="flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-[#388ce0]" />
+                      <span className="font-title text-[#388ce0] uppercase tracking-wide text-xs sm:text-sm">3. Investigasi Dokumen (Teks)</span>
+                    </div>
+                    <ul className="text-[#c8d5e3] text-xs sm:text-sm space-y-1 list-disc list-inside">
+                      <li>Baca cermat seluruh paragraf cerita atau artikel ilmiah.</li>
+                      <li>Temukan <strong>anakronisme era sejarah</strong>, hoaks sains, atau kesalahan logika.</li>
+                      <li><strong>Sorot dan klik kalimat</strong> yang memuat halusinasi fakta tersebut.</li>
+                    </ul>
                   </div>
-                  <ul className="text-[#c8d5e3] text-[11px] sm:text-xs list-disc list-inside space-y-1">
-                    <li>Baca narasi artikel atau dokumen investigasi secara seksama.</li>
-                    <li>Temukan kalimat yang memuat <strong>anakronisme sejarah</strong>, hoaks sains tidak berdasar, atau kesalahan logika hitung.</li>
-                    <li><strong>Sorot dan klik kalimat</strong> yang dicurigai untuk mengungkap kebenaran fakta.</li>
-                  </ul>
-                </div>
-
-                {/* Section 4: Evaluation */}
-                <div className="bg-[#062444]/60 border border-[#1f568d]/50 rounded-xl p-3">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <Award className="w-4 h-4 text-emerald-400" />
-                    <span className="font-title text-emerald-400 uppercase tracking-wide text-xs">3. Evaluasi & Pangkat Detektif</span>
-                  </div>
-                  <p className="text-[#c8d5e3] text-[11px] sm:text-xs">
-                    Selesaikan seluruh kasus dengan sedikit kesalahan klik untuk meraih akurasi 100% dan gelar kehormatan <strong>Mata Dewa (Detektif Legendaris)</strong>!
-                  </p>
-                </div>
+                )}
               </div>
 
-              {/* Close Button */}
-              <button
-                id="btn-close-guide-back"
-                type="button"
-                onClick={() => setIsGuideOpen(false)}
-                className="w-full py-2.5 bg-gradient-to-r from-[#1f568d] via-[#256eb4] to-[#022949] hover:from-[#2877c2] hover:to-[#043660] border border-[#388ce0]/60 text-white rounded-xl text-xs font-title tracking-wider uppercase transition-all cursor-pointer text-center shrink-0 shadow-md hover:scale-[1.02] active:scale-98"
-              >
-                Tutup & Mulai Investigasi
-              </button>
+              {/* Slide Dots Indicator */}
+              <div className="flex items-center justify-center gap-1.5 my-2">
+                {[0, 1, 2].map((idx) => (
+                  <button
+                    key={`guide-dot-${idx}`}
+                    type="button"
+                    onClick={() => setGuideSlide(idx)}
+                    className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                      guideSlide === idx ? 'w-6 bg-[#f0c400]' : 'w-2 bg-[#1f568d]/60 hover:bg-[#388ce0]'
+                    }`}
+                    aria-label={`Ke langkah ${idx + 1}`}
+                  />
+                ))}
+              </div>
+
+              {/* Navigation Actions Footer */}
+              <div className="flex items-center gap-2.5 pt-2 border-t border-[#0f3b66] mt-1 shrink-0">
+                <button
+                  id="btn-guide-prev"
+                  type="button"
+                  onClick={() => setGuideSlide((s) => Math.max(0, s - 1))}
+                  disabled={guideSlide === 0}
+                  className={`px-3 py-2 rounded-xl text-xs font-title tracking-wider uppercase flex items-center gap-1 transition-all ${
+                    guideSlide === 0
+                      ? 'opacity-30 cursor-not-allowed bg-[#062444] text-[#8fabc6]'
+                      : 'bg-[#062444] hover:bg-[#0d3b6c] border border-[#1f568d] text-[#8fabc6] hover:text-white cursor-pointer active:scale-95'
+                  }`}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  <span>Sebelumnya</span>
+                </button>
+
+                {guideSlide < 2 ? (
+                  <button
+                    id="btn-guide-next"
+                    type="button"
+                    onClick={() => setGuideSlide((s) => Math.min(2, s + 1))}
+                    className="flex-1 py-2 bg-gradient-to-r from-[#1f568d] via-[#256eb4] to-[#022949] hover:from-[#2877c2] hover:to-[#043660] border border-[#388ce0]/60 text-white rounded-xl text-xs font-title tracking-wider uppercase flex items-center justify-center gap-1 transition-all cursor-pointer shadow-md hover:scale-[1.02] active:scale-95"
+                  >
+                    <span>Lanjut</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button
+                    id="btn-close-guide-back"
+                    type="button"
+                    onClick={() => setIsGuideOpen(false)}
+                    className="flex-1 py-2 bg-gradient-to-r from-[#f0c400] via-[#e5b800] to-[#b38f00] hover:from-[#ffd21a] hover:to-[#c49d00] text-black font-title tracking-wider uppercase rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-all cursor-pointer shadow-[0_0_20px_rgba(240,196,0,0.4)] hover:scale-[1.02] active:scale-95"
+                  >
+                    <span>Mulai Investigasi</span>
+                    <Check className="w-4 h-4 stroke-[3px]" />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}
