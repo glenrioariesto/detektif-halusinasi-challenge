@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { Volume2, VolumeX } from 'lucide-react';
 import { useGameState } from './hooks/useGameState';
 import { SplashPage } from './pages/splash/SplashPage';
 import { ArenaPage } from './pages/arena/ArenaPage';
 import { ResultPage } from './pages/result/ResultPage';
 import { PortraitWarning } from './components/PortraitWarning';
+import { toggleMute, getIsMuted, startBGM } from './utils/audio';
 
 export default function App() {
   const {
@@ -30,8 +32,10 @@ export default function App() {
   } = useGameState();
 
   const [showFullscreenPrompt, setShowFullscreenPrompt] = useState(false);
+  const [isMutedState, setIsMutedState] = useState(getIsMuted());
 
   const handleStartGame = () => {
+    startBGM();
     const isFullscreenSupported = typeof document !== 'undefined' && !!document.documentElement.requestFullscreen;
     const isCurrentlyFullscreen = typeof document !== 'undefined' && !!document.fullscreenElement;
     if (isFullscreenSupported && !isCurrentlyFullscreen) {
@@ -53,10 +57,34 @@ export default function App() {
     startInvestigation();
   };
 
+  const handleToggleSound = () => {
+    const newMuted = toggleMute();
+    setIsMutedState(newMuted);
+    if (!newMuted) {
+      startBGM();
+    }
+  };
+
   return (
     <div id="app-root" className="h-screen w-screen overflow-hidden bg-[#021324] bg-grid-matrix flex flex-col antialiased text-[#e2eaf4] relative">
       {/* Landscape phone warning banner */}
       <PortraitWarning />
+
+      {/* Global Top-Right Audio Mute/Unmute Toggle (aligned with Top-Left Logo) */}
+      <button
+        id="btn-audio-toggle"
+        type="button"
+        onClick={handleToggleSound}
+        className="absolute top-3 right-3 sm:top-5 sm:right-5 md:top-6 md:right-6 z-50 p-2 sm:p-2.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#1f568d]/60 hover:border-[#f0c400]/70 rounded-xl text-[#8fabc6] hover:text-[#f0c400] transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 glow-ocean flex items-center justify-center select-none"
+        title={isMutedState ? "Nyalakan Suara (Unmute)" : "Matikan Suara (Mute)"}
+        aria-label={isMutedState ? "Nyalakan Suara" : "Matikan Suara"}
+      >
+        {isMutedState ? (
+          <VolumeX className="w-4 h-4 sm:w-5 sm:h-5 text-rose-400" />
+        ) : (
+          <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#f0c400]" />
+        )}
+      </button>
 
       {/* Mode Layar Penuh Modal */}
       {showFullscreenPrompt && (

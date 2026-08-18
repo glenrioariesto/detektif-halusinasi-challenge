@@ -3,6 +3,7 @@ import { CheckCircle2, ArrowRight, X, BookOpen, Target, ImageIcon, FileText, Awa
 import type { Level, MissClick } from '../../types';
 import { InteractiveImage } from '../../components/InteractiveImage';
 import arenaBg from '../../assets/background-gameplay.webp';
+import logoPusbuk from '../../assets/logo-pusbuk.webp';
 
 interface ArenaPageProps {
   currentLevelIndex: number;
@@ -50,6 +51,16 @@ export function ArenaPage({
         className="absolute inset-0 w-full h-full object-cover z-0 opacity-60 filter brightness-85 contrast-115 pointer-events-none"
       />
       <div id="arena-bg-overlay" className="absolute inset-0 bg-gradient-to-t from-[#021324]/90 via-[#021324]/60 to-[#021324]/80 z-1 pointer-events-none"></div>
+
+      {/* HUD: Top-Left Pusbuk Logo (matching Splash layout) */}
+      <div id="arena-logo-container" className="absolute top-3 left-3 sm:top-5 sm:left-5 md:top-6 md:left-6 z-30 shrink-0 pointer-events-none select-none animate-fadeIn">
+        <img
+          id="arena-logo-pusbuk"
+          src={logoPusbuk}
+          alt="Logo Pusbuk"
+          className="h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 w-auto object-contain drop-shadow-md"
+        />
+      </div>
 
       {/* Immersive Game UI stretching to landscape screen bounds */}
       <div id="arena-ui-container" className="relative w-full h-full z-10 flex flex-col">

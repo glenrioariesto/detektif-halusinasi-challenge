@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Award, RotateCcw, Check, BookOpen, ImageIcon, FileText, X } from 'lucide-react';
 import { UserLevelAnswer, Level } from '../../types';
+import logoPusbuk from '../../assets/logo-pusbuk.webp';
 
 interface ResultPageProps {
   score: number;
@@ -30,6 +31,16 @@ export function ResultPage({ score, totalMisses, answers, onRestart, getRank, le
 
   return (
     <div id="result-page" className="h-screen w-screen bg-[#021324] relative flex flex-col items-center justify-center p-4 text-[#e2eaf4] scanlines overflow-hidden">
+      {/* Top-Left Pusbuk Logo */}
+      <div id="result-logo-container" className="absolute top-3 left-3 sm:top-5 sm:left-5 md:top-6 md:left-6 z-30 shrink-0 pointer-events-none select-none animate-fadeIn">
+        <img
+          id="result-logo-pusbuk"
+          src={logoPusbuk}
+          alt="Logo Pusbuk"
+          className="h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 w-auto object-contain drop-shadow-md"
+        />
+      </div>
+
       {/* Glow background circles */}
       <div className="absolute top-10 left-10 w-96 h-96 bg-[#1f568d]/15 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#f0c400]/10 rounded-full blur-[120px] pointer-events-none"></div>
