@@ -13,8 +13,6 @@ interface InteractiveImageProps {
   onClick: (x: number, y: number) => void;
   disabled: boolean;
   showGrid?: boolean;
-  devShowHotspot?: boolean;
-  activeHotspotIndex?: number;
 }
 
 export function InteractiveImage({
@@ -27,9 +25,7 @@ export function InteractiveImage({
   missClicks,
   onClick,
   disabled,
-  showGrid = false,
-  devShowHotspot,
-  activeHotspotIndex = 0
+  showGrid = false
 }: InteractiveImageProps) {
   const [lensState, setLensState] = useState({
     show: false,
@@ -210,44 +206,7 @@ export function InteractiveImage({
         </div>
       )}
 
-      {/* DEV MODE HOTSPOT INDICATORS FOR ALL HOTSPOTS */}
-      {devShowHotspot && allHotspots.length > 0 && imgLoaded && !found && (
-        <>
-          {allHotspots.map((hs, index) => {
-            const isActive = index === activeHotspotIndex;
-            return (
-              <div
-                key={`dev-hs-${index}`}
-                className={`absolute border-2 transition-colors pointer-events-none z-35 ${
-                  isActive 
-                    ? 'border-amber-400 bg-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.6)]' 
-                    : 'border-amber-600/60 bg-amber-900/15'
-                }`}
-                style={{
-                  left: `${hs.x}%`,
-                  top: `${hs.y}%`,
-                  width: `${(hs.radiusX !== undefined ? hs.radiusX : hs.radius) * 2}%`,
-                  height: `${(hs.radiusY !== undefined ? hs.radiusY : hs.radius) * 2}%`,
-                  borderRadius: `${hs.borderRadius !== undefined ? hs.borderRadius : 50}%`,
-                  transform: `translate(-50%, -50%) rotate(${hs.rotation || 0}deg)`,
-                }}
-              >
-                {/* Center pointer dot */}
-                <div className={`w-2.5 h-2.5 rounded-full ${isActive ? 'bg-amber-300 shadow-[0_0_8px_#f59e0b]' : 'bg-amber-600'}`}></div>
-                {/* Rotation Direction Arrow Indicator */}
-                <div className="absolute top-0 w-0.5 h-1/2 bg-amber-400/80 origin-bottom"></div>
-                
-                {/* Small label badge */}
-                <div className={`border text-[9px] px-1.5 py-0.5 rounded absolute bottom-full mb-1 whitespace-nowrap font-bold shadow-md ${
-                  isActive ? 'bg-amber-950/95 border-amber-400 text-amber-300' : 'bg-black/80 border-amber-800 text-amber-500'
-                }`}>
-                  #{index + 1}: {hs.label}
-                </div>
-              </div>
-            );
-          })}
-        </>
-      )}
+
 
       {/* RENDER HOTSPOTS AS THEY ARE DISCOVERED */}
       {allHotspots.length > 0 && imgLoaded && (
