@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ZoomIn, Target, Grid } from 'lucide-react';
+import { ZoomIn, Target } from 'lucide-react';
 import { Hotspot, MissClick } from '../types';
 
 interface InteractiveImageProps {
@@ -12,7 +12,7 @@ interface InteractiveImageProps {
   missClicks: MissClick[];
   onClick: (x: number, y: number) => void;
   disabled: boolean;
-  showGrid: boolean;
+  showGrid?: boolean;
   devShowHotspot?: boolean;
   activeHotspotIndex?: number;
 }
@@ -27,7 +27,7 @@ export function InteractiveImage({
   missClicks,
   onClick,
   disabled,
-  showGrid,
+  showGrid = false,
   devShowHotspot,
   activeHotspotIndex = 0
 }: InteractiveImageProps) {
@@ -122,9 +122,10 @@ export function InteractiveImage({
 
   return (
     <button
+      id="interactive-image-container"
       ref={containerRef}
       type="button"
-      className="relative inline-block w-auto max-w-[85vw] sm:max-w-md md:max-w-xl max-h-[65vh] sm:max-h-[75vh] bg-[#020502]/80 border border-emerald-900 rounded-2xl overflow-hidden cursor-crosshair mx-auto select-none text-left shadow-2xl shrink-0 p-0"
+      className="relative inline-block w-auto max-w-[85vw] sm:max-w-md md:max-w-xl max-h-[65vh] sm:max-h-[75vh] bg-[#021324]/90 border border-[#1f568d]/60 rounded-2xl overflow-hidden cursor-crosshair mx-auto select-none text-left shadow-2xl shrink-0 p-0"
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -136,14 +137,15 @@ export function InteractiveImage({
     >
       {/* Zoom indicator tag */}
       {!found && !disabled && (
-        <div className="absolute top-4 right-4 z-10 bg-slate-900/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-slate-700/60 text-slate-400 text-[10px] font-mono flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
-          <ZoomIn className="w-3.5 h-3.5 text-emerald-400" />
+        <div id="interactive-image-scan-indicator" className="absolute top-4 right-4 z-10 bg-[#041a32]/80 backdrop-blur-md px-2.5 py-1 rounded-full border border-[#1f568d]/60 text-[#8fabc6] text-[10px] font-mono flex items-center gap-1.5 opacity-70 hover:opacity-100 transition-opacity">
+          <ZoomIn className="w-3.5 h-3.5 text-[#388ce0]" />
           <span>Arahkan untuk Scan</span>
         </div>
       )}
 
       {/* Main image */}
       <img
+        id="interactive-image-target"
         ref={imgRef}
         src={src}
         alt={alt}
@@ -154,20 +156,20 @@ export function InteractiveImage({
 
       {/* Loading indicator */}
       {!imgLoaded && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-emerald-500 font-mono gap-2 text-xs bg-[#020502]">
-          <div className="w-8 h-8 border-4 border-emerald-500/20 border-t-emerald-450 rounded-full animate-spin"></div>
+        <div id="interactive-image-loading" className="absolute inset-0 flex flex-col items-center justify-center text-[#8fabc6] font-mono gap-2 text-xs bg-[#021324]">
+          <div className="w-8 h-8 border-4 border-[#1f568d]/30 border-t-[#388ce0] rounded-full animate-spin"></div>
           Memuat Gambar Bukti...
         </div>
       )}
 
       {/* Grid Overlay */}
       {showGrid && imgLoaded && !found && !disabled && (
-        <div className="absolute inset-0 z-20 pointer-events-none select-none">
+        <div id="interactive-image-grid-overlay" className="absolute inset-0 z-20 pointer-events-none select-none">
           {/* Vertical lines */}
           {Array.from({ length: 9 }).map((_, i) => (
             <div
               key={`v-${i}`}
-              className="absolute top-0 bottom-0 border-l border-emerald-500/20"
+              className="absolute top-0 bottom-0 border-l border-[#1f568d]/30"
               style={{ left: `${(i + 1) * 10}%` }}
             />
           ))}
@@ -175,13 +177,13 @@ export function InteractiveImage({
           {Array.from({ length: 9 }).map((_, i) => (
             <div
               key={`h-${i}`}
-              className="absolute left-0 right-0 border-t border-emerald-500/20"
+              className="absolute left-0 right-0 border-t border-[#1f568d]/30"
               style={{ top: `${(i + 1) * 10}%` }}
             />
           ))}
           
           {/* Grid Labels (X-Axis: A-J) */}
-          <div className="absolute top-1 left-0 right-0 flex justify-between px-2 text-[8px] font-mono text-emerald-500/40">
+          <div className="absolute top-1 left-0 right-0 flex justify-between px-2 text-[8px] font-mono text-[#8fabc6]/60">
             {['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'].map((label, idx) => (
               <span
                 key={`lbl-x-${idx}`}
@@ -194,7 +196,7 @@ export function InteractiveImage({
           </div>
 
           {/* Grid Labels (Y-Axis: 1-10) */}
-          <div className="absolute top-0 bottom-0 left-1 flex flex-col justify-between py-2 text-[8px] font-mono text-emerald-500/40">
+          <div className="absolute top-0 bottom-0 left-1 flex flex-col justify-between py-2 text-[8px] font-mono text-[#8fabc6]/60">
             {Array.from({ length: 10 }).map((_, idx) => (
               <span
                 key={`lbl-y-${idx}`}
@@ -257,7 +259,7 @@ export function InteractiveImage({
             return (
               <div
                 key={`reveal-hs-${index}`}
-                className="absolute border-2 border-emerald-400 bg-emerald-500/10 shadow-[0_0_20px_rgba(52,211,153,0.5)] flex items-center justify-center animate-pulse"
+                className="absolute border-2 border-[#f0c400] bg-[#f0c400]/20 shadow-[0_0_20px_rgba(240,196,0,0.6)] flex items-center justify-center animate-pulse"
                 style={{
                   left: `${hs.x}%`,
                   top: `${hs.y}%`,
@@ -270,11 +272,11 @@ export function InteractiveImage({
                 }}
               >
                 {/* Target Scanner Crosshair */}
-                <div className="absolute w-full h-0.5 bg-emerald-400/40"></div>
-                <div className="absolute h-full w-0.5 bg-emerald-400/40"></div>
+                <div className="absolute w-full h-0.5 bg-[#f0c400]/60"></div>
+                <div className="absolute h-full w-0.5 bg-[#f0c400]/60"></div>
                 
                 {/* Small badge */}
-                <div className="bg-slate-900/90 border border-emerald-400 text-emerald-400 font-mono text-[9px] px-1.5 py-0.5 rounded shadow absolute top-full mt-2 whitespace-nowrap">
+                <div className="bg-[#041a32]/95 border border-[#f0c400] text-[#f0c400] font-mono text-[9px] px-2 py-0.5 rounded-md shadow-[0_0_10px_rgba(240,196,0,0.3)] absolute top-full mt-2 whitespace-nowrap font-bold">
                   {hs.label}
                 </div>
               </div>
@@ -306,7 +308,8 @@ export function InteractiveImage({
       {/* MAGNIFIER LENS */}
       {lensState.show && imgLoaded && !disabled && !found && (
         <div
-          className="absolute pointer-events-none rounded-full border-2 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.4)] w-[140px] h-[140px] bg-no-repeat z-40"
+          id="interactive-image-magnifier-lens"
+          className="absolute pointer-events-none rounded-full border-2 border-[#388ce0] shadow-[0_0_20px_rgba(56,140,224,0.6)] w-[140px] h-[140px] bg-no-repeat z-40"
           style={{
             left: `${lensState.x - 70}px`,
             top: `${lensState.y - 70}px`,

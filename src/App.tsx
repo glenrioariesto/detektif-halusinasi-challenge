@@ -53,45 +53,47 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-[#040804] bg-grid-matrix flex flex-col antialiased text-emerald-100 relative">
+    <div id="app-root" className="h-screen w-screen overflow-hidden bg-[#021324] bg-grid-matrix flex flex-col antialiased text-[#e2eaf4] relative">
       {/* Landscape phone warning banner */}
       <PortraitWarning />
 
       {/* Mode Layar Penuh Modal */}
       {showFullscreenPrompt && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-emerald-950/80 backdrop-blur-md p-4 select-none animate-fadeIn">
-          <div className="relative max-w-sm w-full mx-auto bg-[#040804] border border-emerald-500/30 shadow-2xl shadow-emerald-950/50 rounded-3xl p-6 sm:p-8 flex flex-col items-center text-center">
+        <div id="modal-fullscreen-prompt" className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 select-none animate-fadeIn">
+          <div id="card-fullscreen-prompt" className="relative max-w-sm w-full mx-auto bg-[#041a32] border-2 border-[#1f568d] shadow-[0_0_35px_rgba(31,86,141,0.4)] rounded-3xl p-6 sm:p-8 flex flex-col items-center text-center">
             <div className="relative flex items-center justify-center mb-6">
-              <div className="absolute w-20 h-20 bg-emerald-500/20 rounded-full animate-ping opacity-75" />
-              <div className="w-16 h-16 bg-emerald-950/50 border border-emerald-500/40 rounded-2xl flex items-center justify-center text-3xl shadow-sm z-10">
+              <div className="absolute w-20 h-20 bg-[#1f568d]/30 rounded-full animate-ping opacity-75" />
+              <div className="w-16 h-16 bg-[#062444] border-2 border-[#f0c400] rounded-2xl flex items-center justify-center text-3xl shadow-sm z-10 glow-gold">
                 📺
               </div>
             </div>
 
-            <h3 className="text-lg sm:text-xl font-black text-emerald-300 tracking-tight mb-2 uppercase font-mono">
+            <h3 className="text-lg sm:text-xl font-black text-white tracking-tight mb-2 uppercase font-mono">
               Mode Layar Penuh
             </h3>
             
-            <p className="text-xs sm:text-sm text-emerald-400/70 font-medium leading-relaxed mb-6">
+            <p className="text-xs sm:text-sm text-[#c8d5e3] font-medium leading-relaxed mb-6">
               Apakah Anda ingin masuk ke mode layar penuh?
             </p>
 
             <div className="flex items-center gap-3 w-full font-mono">
               <button
+                id="btn-fullscreen-yes"
                 type="button"
                 onClick={enterFullscreen}
-                className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-slate-950 font-extrabold py-2.5 rounded-xl transition-all shadow-md shadow-emerald-500/20 active:scale-95 cursor-pointer border-none"
+                className="flex-1 bg-gradient-to-r from-[#1f568d] via-[#256eb4] to-[#022949] hover:from-[#2877c2] hover:to-[#043660] border border-[#388ce0]/60 text-white font-extrabold py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(31,86,141,0.4)] active:scale-95 cursor-pointer"
               >
                 Yes
               </button>
               
               <button
+                id="btn-fullscreen-no"
                 type="button"
                 onClick={() => {
                   setShowFullscreenPrompt(false);
                   startInvestigation();
                 }}
-                className="flex-1 bg-slate-900 hover:bg-slate-800 border border-emerald-900/50 text-emerald-300 font-extrabold py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer"
+                className="flex-1 bg-[#062444] hover:bg-[#0d3b6c] border border-[#1f568d]/70 text-[#8fabc6] hover:text-white font-extrabold py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer"
               >
                 No
               </button>
@@ -120,7 +122,6 @@ export default function App() {
           onImageClick={handleImageClick}
           onSegmentClick={handleSegmentClick}
           onAdvance={advanceLevel}
-          onBack={restartGame}
         />
       )}
 

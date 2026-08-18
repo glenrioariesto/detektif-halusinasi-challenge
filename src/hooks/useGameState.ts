@@ -4,10 +4,10 @@ import { CAMPAIGN_LEVELS } from '../data/questions';
 import { playSynthesizerNote } from '../utils/audio';
 
 const getRank = (score: number) => {
-  if (score === 10) return { title: "Mata Dewa (Detektif Legendaris)", desc: "Sempurna! Anda berhasil mengungkap semua anomali citra dan teks tanpa luput satu pun.", color: "text-emerald-300 border-2 border-emerald-500 bg-emerald-950/30 glow-emerald" };
-  if (score >= 8) return { title: "Detektif Halusinasi Senior", desc: "Sangat jeli melihat keganjilan piksel dan teks, sanggup mendeteksi rekayasa KA dengan baik.", color: "text-green-300 border-2 border-green-600 bg-green-950/30" };
-  if (score >= 4) return { title: "Penyelidik Siber Magang", desc: "Kejelian Anda cukup baik, namun masih sering terkecoh oleh detail kecil rekayasa KA.", color: "text-teal-300 border-2 border-teal-600 bg-teal-950/30" };
-  return { title: "Piksel Kabur (Detektif Amatir)", desc: "Anda masih perlu melatih kejelian mata dan lebih kritis dalam mengamati detail citra dan teks digital.", color: "text-rose-400 border-2 border-rose-800 bg-rose-950/30 glow-rose" };
+  if (score === 10) return { title: "Mata Dewa (Detektif Legendaris)", desc: "Sempurna! Anda berhasil mengungkap semua anomali citra dan teks tanpa luput satu pun.", color: "text-amber-300 border-2 border-amber-400 bg-amber-950/40 glow-gold" };
+  if (score >= 8) return { title: "Detektif Halusinasi Senior", desc: "Sangat jeli melihat keganjilan piksel dan teks, sanggup mendeteksi rekayasa KA dengan baik.", color: "text-sky-300 border-2 border-sky-500 bg-[#0c3258]/60 glow-ocean" };
+  if (score >= 4) return { title: "Penyelidik Siber Magang", desc: "Kejelian Anda cukup baik, namun masih sering terkecoh oleh detail kecil rekayasa KA.", color: "text-blue-300 border-2 border-blue-600 bg-[#072442]/60" };
+  return { title: "Piksel Kabur (Detektif Amatir)", desc: "Anda masih perlu melatih kejelian mata dan lebih kritis dalam mengamati detail citra dan teks digital.", color: "text-rose-400 border-2 border-rose-600 bg-rose-950/40 glow-rose" };
 };
 
 export const useGameState = () => {
@@ -38,6 +38,7 @@ export const useGameState = () => {
       showFeedback: false,
       attempts: 0,
       foundHotspot: false,
+      foundHotspotIndices: [],
       selectedSegmentIndex: null,
       missClicks: [],
     });

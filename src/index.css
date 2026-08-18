@@ -15,9 +15,9 @@
 }
 
 body {
-  background-color: #040804; /* Obsidian Glitch Black */
+  background-color: #021324; /* Obsidian Oceanic Navy */
   font-family: var(--font-sans);
-  color: #a7f3d0; /* Lime green text tint */
+  color: #e2eaf4; /* Ice blue crisp text tint */
 }
 
 /* Reduced Motion Accessibility Settings */
@@ -31,20 +31,20 @@ body {
   }
 }
 
-/* Custom Scrollbars - Matrix Terminal Green */
+/* Custom Scrollbars - Oceanic Detective Blue */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #020402;
+  background: #021324;
 }
 ::-webkit-scrollbar-thumb {
-  background: #15803d;
+  background: #1f568d;
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #22c55e;
+  background: #388ce0;
 }
 
 /* Cyber Matrix Glitch Scanline effect for background */
@@ -57,27 +57,27 @@ body {
   display: block;
   position: absolute;
   top: 0; left: 0; bottom: 0; right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(16, 185, 129, 0.08) 50%);
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(31, 86, 141, 0.08) 50%);
   background-size: 100% 4px;
   z-index: 2;
   pointer-events: none;
 }
 
-/* Lime Glitch Glows */
-.glow-lime {
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+/* Asset Palette Glows */
+.glow-ocean {
+  box-shadow: 0 0 15px rgba(31, 86, 141, 0.55);
 }
-.glow-emerald {
-  box-shadow: 0 0 15px rgba(52, 211, 153, 0.4);
+.glow-gold {
+  box-shadow: 0 0 15px rgba(240, 196, 0, 0.5);
+}
+.glow-cyan {
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.45);
 }
 .glow-rose {
   box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
 }
-.glow-violet {
-  box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
-}
 
-@keyframes grid-move-green {
+@keyframes grid-move-ocean {
   0% { background-position: 0 0; }
   100% { background-position: 30px 30px; }
 }
@@ -85,9 +85,9 @@ body {
 .bg-grid-matrix {
   background-size: 30px 30px;
   background-image: 
-    linear-gradient(to right, rgba(16, 185, 129, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
-  animation: grid-move-green 15s linear infinite;
+    linear-gradient(to right, rgba(31, 86, 141, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(31, 86, 141, 0.08) 1px, transparent 1px);
+  animation: grid-move-ocean 15s linear infinite;
 }
 
 /* Fade in custom keyframe */

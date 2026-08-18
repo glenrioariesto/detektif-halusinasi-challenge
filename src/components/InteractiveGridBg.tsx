@@ -51,10 +51,10 @@ export function InteractiveGridBg() {
       // Initialize 80 glowing dust particles inside the card
       const arr: Particle[] = [];
       const colors = [
-        'rgba(16, 185, 129, 0.45)', // Emerald
-        'rgba(52, 211, 153, 0.45)', // Mint/Emerald
-        'rgba(34, 197, 94, 0.45)',  // Lime green
-        'rgba(5, 150, 105, 0.45)'   // Dark Emerald
+        'rgba(31, 86, 141, 0.55)', // Oceanic Blue
+        'rgba(56, 140, 224, 0.55)', // Sky Blue
+        'rgba(240, 196, 0, 0.5)',  // Cyber Gold
+        'rgba(14, 165, 233, 0.45)'  // Light Sky
       ];
       
       for (let i = 0; i < 80; i++) {
@@ -217,10 +217,10 @@ export function InteractiveGridBg() {
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Draw halo connection line to mouse if close (Emerald glow)
+        // Draw halo connection line to mouse if close
         if (dist < 120) {
-          const lineAlpha = (1 - dist / 120) * 0.12;
-          ctx.strokeStyle = `rgba(52, 211, 153, ${lineAlpha})`;
+          const lineAlpha = (1 - dist / 120) * 0.15;
+          ctx.strokeStyle = `rgba(56, 140, 224, ${lineAlpha})`;
           ctx.lineWidth = 0.5;
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
@@ -240,8 +240,8 @@ export function InteractiveGridBg() {
           const d = Math.sqrt(dx * dx + dy * dy);
 
           if (d < 70) {
-            const lineOpacity = (1 - d / 70) * 0.08;
-            ctx.strokeStyle = `rgba(52, 211, 153, ${lineOpacity})`;
+            const lineOpacity = (1 - d / 70) * 0.1;
+            ctx.strokeStyle = `rgba(56, 140, 224, ${lineOpacity})`;
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
@@ -265,5 +265,5 @@ export function InteractiveGridBg() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block z-0" style={{ pointerEvents: 'none' }} />;
+  return <canvas id="interactive-grid-canvas" ref={canvasRef} className="absolute inset-0 w-full h-full block z-0" style={{ pointerEvents: 'none' }} />;
 }
