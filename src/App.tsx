@@ -75,14 +75,14 @@ export default function App() {
         id="btn-audio-toggle"
         type="button"
         onClick={handleToggleSound}
-        className="absolute top-3 right-3 sm:top-5 sm:right-5 md:top-6 md:right-6 z-50 p-2 sm:p-2.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#1f568d]/60 hover:border-[#f0c400]/70 rounded-xl text-[#8fabc6] hover:text-[#f0c400] transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 glow-ocean flex items-center justify-center select-none"
+        className="absolute top-3 right-3 sm:top-5 sm:right-5 md:top-6 md:right-6 2xl:top-10 2xl:right-10 z-50 p-2 sm:p-2.5 2xl:p-4 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#1f568d]/60 hover:border-[#f0c400]/70 rounded-xl 2xl:rounded-2xl text-[#8fabc6] hover:text-[#f0c400] transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 glow-ocean flex items-center justify-center select-none"
         title={isMutedState ? "Nyalakan Suara (Unmute)" : "Matikan Suara (Mute)"}
         aria-label={isMutedState ? "Nyalakan Suara" : "Matikan Suara"}
       >
         {isMutedState ? (
-          <VolumeX className="w-4 h-4 sm:w-5 sm:h-5 text-rose-400" />
+          <VolumeX className="w-4 h-4 sm:w-5 sm:h-5 2xl:w-8 2xl:h-8 text-rose-400" />
         ) : (
-          <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#f0c400]" />
+          <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 2xl:w-8 2xl:h-8 text-[#f0c400]" />
         )}
       </button>
 

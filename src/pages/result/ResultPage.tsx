@@ -32,12 +32,12 @@ export function ResultPage({ score, totalMisses, answers, onRestart, getRank, le
   return (
     <div id="result-page" className="h-screen w-screen bg-[#021324] relative flex flex-col items-center justify-center p-4 text-[#e2eaf4] scanlines overflow-hidden">
       {/* Top-Left Pusbuk Logo */}
-      <div id="result-logo-container" className="absolute top-3 left-3 sm:top-5 sm:left-5 md:top-6 md:left-6 z-30 shrink-0 pointer-events-none select-none animate-fadeIn">
+      <div id="result-logo-container" className="absolute top-3 left-3 sm:top-5 sm:left-5 md:top-6 md:left-6 2xl:top-10 2xl:left-10 z-30 shrink-0 pointer-events-none select-none animate-fadeIn">
         <img
           id="result-logo-pusbuk"
           src={logoPusbuk}
           alt="Logo Pusbuk"
-          className="h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 w-auto object-contain drop-shadow-md"
+          className="h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 2xl:h-20 w-auto object-contain drop-shadow-md"
         />
       </div>
 

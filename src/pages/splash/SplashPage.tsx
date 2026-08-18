@@ -21,7 +21,7 @@ export function SplashPage({ onStart }: SplashPageProps) {
       />
 
       {/* Pusbuk Logo on Absolute Top Left */}
-      <div id="splash-logo-container" className="absolute top-3 left-3 sm:top-5 sm:left-5 md:top-6 md:left-6 lg:top-8 lg:left-8 z-20 shrink-0 animate-fadeIn">
+      <div id="splash-logo-container" className="absolute top-3 left-3 sm:top-5 sm:left-5 md:top-6 md:left-6 lg:top-8 lg:left-8 2xl:top-10 2xl:left-10 z-20 shrink-0 animate-fadeIn">
         <img
           id="splash-logo-pusbuk"
           src={logoPusbuk}
