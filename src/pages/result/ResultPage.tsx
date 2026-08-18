@@ -4,16 +4,29 @@ import { UserLevelAnswer, Level } from '../../types';
 
 interface ResultPageProps {
   score: number;
+  totalMisses: number;
   answers: UserLevelAnswer[];
   onRestart: () => void;
-  getRank: (score: number) => { title: string; desc: string; color: string };
+  getRank: (accuracy: number) => { title: string; desc: string; color: string };
   levels: Level[];
 }
 
-export function ResultPage({ score, answers, onRestart, getRank, levels }: ResultPageProps) {
+export function ResultPage({ score, totalMisses, answers, onRestart, getRank, levels }: ResultPageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const rank = getRank(score);
-  const accuracy = Math.min(100, Math.max(0, Math.round((score / levels.length) * 100)));
+
+  // Total target anomalies across all levels (8 image hotspots + 5 text sentences = 13 targets)
+  const totalTargets = levels.reduce((acc, lvl) => {
+    if (lvl.type === 'image') {
+      return acc + (lvl.hotspots ? lvl.hotspots.length : (lvl.hotspot ? 1 : 1));
+    }
+    return acc + 1;
+  }, 0);
+
+  // Precision calculation with guaranteed 60% minimum floor
+  const misses = Math.max(0, totalMisses || 0);
+  const precision = totalTargets / (totalTargets + misses);
+  const accuracy = misses === 0 ? 100 : Math.min(100, Math.max(60, Math.round(60 + 40 * precision)));
+  const rank = getRank(accuracy);
 
   return (
     <div id="result-page" className="h-screen w-screen bg-[#021324] relative flex flex-col items-center justify-center p-4 text-[#e2eaf4] scanlines overflow-hidden">
@@ -32,7 +45,7 @@ export function ResultPage({ score, answers, onRestart, getRank, levels }: Resul
           {/* Circular Score Gauge */}
           <div id="card-result-accuracy" className="bg-[#041a32]/90 border-2 border-[#1f568d]/60 rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center backdrop-blur-md shadow-xl">
             <span className="text-[8px] sm:text-[9px] font-mono font-bold text-[#8fabc6] uppercase tracking-widest mb-2 sm:mb-3">
-              Indeks Akurasi
+              Indeks Akurasi Penyelidikan
             </span>
             <div id="gauge-accuracy-circle" className="relative w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center">
               <div className="absolute inset-0 rounded-full border-4 border-[#062444]"></div>
@@ -46,10 +59,13 @@ export function ResultPage({ score, answers, onRestart, getRank, levels }: Resul
               <div className="flex flex-col items-center">
                 <span className="text-xl sm:text-2xl font-black font-mono text-[#f0c400]">{accuracy}%</span>
                 <span className="text-[7px] sm:text-[8px] font-mono text-[#8fabc6] uppercase font-bold mt-0.5 sm:mt-1">
-                  {score}/{levels.length} Terkunci
+                  {score}/{levels.length} Kasus Selesai
                 </span>
               </div>
             </div>
+            <span className="text-[8px] sm:text-[9px] font-mono text-[#8fabc6] mt-2">
+              {misses === 0 ? '✨ Sempurna (0 Meleset)' : `⚠️ ${misses}x Salah Klik`}
+            </span>
           </div>
 
           {/* Rank Badge description */}
@@ -69,11 +85,15 @@ export function ResultPage({ score, answers, onRestart, getRank, levels }: Resul
             <div className="flex items-center gap-3 sm:gap-4 text-[8px] sm:text-[10px] font-mono text-[#8fabc6] font-bold">
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#f0c400] border border-[#062444]"></div>
-                <span>Sukses: {score}</span>
+                <span>Kasus: {score}/{levels.length}</span>
               </div>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#388ce0] border border-[#062444]"></div>
-                <span>Total: {levels.length} Kasus</span>
+                <span>Target: {totalTargets} Anomali</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-rose-400 border border-[#062444]"></div>
+                <span>Meleset: {misses}x</span>
               </div>
             </div>
           </div>
@@ -131,13 +151,17 @@ export function ResultPage({ score, answers, onRestart, getRank, levels }: Resul
                       <th className="pb-2 font-bold uppercase tracking-wider w-12 text-center">Kasus</th>
                       <th className="pb-2 font-bold uppercase tracking-wider">Topik/Kategori</th>
                       <th className="pb-2 font-bold uppercase tracking-wider text-center w-24">Tipe Mode</th>
-                      <th className="pb-2 font-bold uppercase tracking-wider text-center w-24">Percobaan</th>
+                      <th className="pb-2 font-bold uppercase tracking-wider text-center w-24">Target</th>
+                      <th className="pb-2 font-bold uppercase tracking-wider text-center w-28">Percobaan</th>
                       <th className="pb-2 font-bold uppercase tracking-wider text-center w-24">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#0f3b66]/60">
                     {levels.map((c) => {
                       const ans = answers.find(a => a.levelId === c.id);
+                      const targetCount = c.type === 'image' ? (c.hotspots?.length || (c.hotspot ? 1 : 1)) : 1;
+                      const missInLevel = ans?.missCount || 0;
+
                       return (
                         <tr key={c.id} className="hover:bg-[#062444]/40">
                           <td className="py-2.5 text-center text-[#8fabc6]">#0{c.id}</td>
@@ -158,8 +182,23 @@ export function ResultPage({ score, answers, onRestart, getRank, levels }: Resul
                               )}
                             </span>
                           </td>
-                          <td className="py-2.5 text-center text-[#e2eaf4]">
-                            {ans ? `${ans.attemptsCount}x Klik` : '-'}
+                          <td className="py-2.5 text-center text-[#8fabc6]">
+                            {targetCount} Anomali
+                          </td>
+                          <td className="py-2.5 text-center">
+                            {ans ? (
+                              missInLevel === 0 ? (
+                                <span className="text-emerald-400 font-bold">
+                                  {ans.attemptsCount}x (Sempurna)
+                                </span>
+                              ) : (
+                                <span className="text-amber-300">
+                                  {ans.attemptsCount}x ({missInLevel} Meleset)
+                                </span>
+                              )
+                            ) : (
+                              <span className="text-[#8fabc6]">-</span>
+                            )}
                           </td>
                           <td className="py-2.5 text-center">
                             <span className="inline-flex items-center gap-1 text-[#f0c400] bg-[#f0c400]/10 border border-[#f0c400]/30 px-2 py-0.5 rounded text-[9px] font-bold">

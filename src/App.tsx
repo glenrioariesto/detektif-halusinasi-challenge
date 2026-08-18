@@ -13,6 +13,7 @@ export default function App() {
     totalLevels,
     levelsForMode,
     score,
+    totalMisses,
     answers,
     showFeedback,
     attempts,
@@ -128,6 +129,7 @@ export default function App() {
       {pageView === 'result' && (
         <ResultPage
           score={score}
+          totalMisses={totalMisses}
           answers={answers}
           onRestart={restartGame}
           getRank={getRank}

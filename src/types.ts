@@ -34,6 +34,7 @@ export interface UserLevelAnswer {
   clickedPoint?: { x: number; y: number };
   selectedSegmentIndex?: number;
   attemptsCount: number;
+  missCount?: number;
 }
 
 export interface MissClick {
@@ -47,6 +48,8 @@ export interface GameState {
   gameMode: 'image' | 'text' | null;
   currentLevelIndex: number;
   score: number;
+  totalMisses: number;
+  levelMisses: number;
   answers: UserLevelAnswer[];
   showFeedback: boolean;
   attempts: number;

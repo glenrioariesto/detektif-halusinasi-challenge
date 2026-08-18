@@ -3,11 +3,40 @@ import { GameState, UserLevelAnswer, MissClick } from '../types';
 import { CAMPAIGN_LEVELS } from '../data/questions';
 import { playSynthesizerNote } from '../utils/audio';
 
-const getRank = (score: number) => {
-  if (score === 10) return { title: "Mata Dewa (Detektif Legendaris)", desc: "Sempurna! Anda berhasil mengungkap semua anomali citra dan teks tanpa luput satu pun.", color: "text-amber-300 border-2 border-amber-400 bg-amber-950/40 glow-gold" };
-  if (score >= 8) return { title: "Detektif Halusinasi Senior", desc: "Sangat jeli melihat keganjilan piksel dan teks, sanggup mendeteksi rekayasa KA dengan baik.", color: "text-sky-300 border-2 border-sky-500 bg-[#0c3258]/60 glow-ocean" };
-  if (score >= 4) return { title: "Penyelidik Siber Magang", desc: "Kejelian Anda cukup baik, namun masih sering terkecoh oleh detail kecil rekayasa KA.", color: "text-blue-300 border-2 border-blue-600 bg-[#072442]/60" };
-  return { title: "Piksel Kabur (Detektif Amatir)", desc: "Anda masih perlu melatih kejelian mata dan lebih kritis dalam mengamati detail citra dan teks digital.", color: "text-rose-400 border-2 border-rose-600 bg-rose-950/40 glow-rose" };
+export const getRank = (accuracy: number) => {
+  if (accuracy === 100) {
+    return {
+      title: "Mata Dewa (Detektif Legendaris)",
+      desc: "Sempurna! Anda berhasil mengungkap semua anomali citra dan teks dengan presisi 100% tanpa satu pun salah klik.",
+      color: "text-amber-300 border-2 border-amber-400 bg-amber-950/40 glow-gold"
+    };
+  }
+  if (accuracy >= 90) {
+    return {
+      title: "Detektif Halusinasi Senior",
+      desc: "Sangat tajam! Anda sanggup membedakan rekayasa KA dengan akurasi tinggi dan minim kesalahan.",
+      color: "text-sky-300 border-2 border-sky-500 bg-[#0c3258]/60 glow-ocean"
+    };
+  }
+  if (accuracy >= 80) {
+    return {
+      title: "Penyelidik Siber Madya",
+      desc: "Cukup jeli! Anda mampu memecahkan kasus meski sempat terkecoh beberapa kali oleh detail palsu.",
+      color: "text-blue-300 border-2 border-blue-500 bg-[#0a2f54]/60"
+    };
+  }
+  if (accuracy >= 70) {
+    return {
+      title: "Penyelidik Siber Magang",
+      desc: "Kejelian Anda cukup baik, namun masih sering terkecoh oleh detail kecil rekayasa KA dan butuh banyak percobaan.",
+      color: "text-indigo-300 border-2 border-indigo-500 bg-[#072442]/60"
+    };
+  }
+  return {
+    title: "Piksel Kabur (Detektif Amatir)",
+    desc: "Anda masih perlu melatih kejelian mata dan lebih kritis dalam mengamati detail citra dan teks digital sebelum memutuskan.",
+    color: "text-rose-400 border-2 border-rose-600 bg-rose-950/40 glow-rose"
+  };
 };
 
 export const useGameState = () => {
@@ -16,6 +45,8 @@ export const useGameState = () => {
     gameMode: null,
     currentLevelIndex: 0,
     score: 0,
+    totalMisses: 0,
+    levelMisses: 0,
     answers: [],
     showFeedback: false,
     attempts: 0,
@@ -34,6 +65,8 @@ export const useGameState = () => {
       gameMode: null,
       currentLevelIndex: 0,
       score: 0,
+      totalMisses: 0,
+      levelMisses: 0,
       answers: [],
       showFeedback: false,
       attempts: 0,
@@ -80,11 +113,13 @@ export const useGameState = () => {
         levelId: activeLevel.id,
         isCorrect: true,
         clickedPoint: { x, y },
-        attemptsCount: state.attempts + 1
+        attemptsCount: state.attempts + 1,
+        missCount: state.levelMisses
       };
       
       setState(prev => ({
         ...prev,
+        attempts: prev.attempts + 1,
         foundHotspotIndices: updatedFoundIndices,
         answers: isAllHotspotsFound ? [...prev.answers, newAnswer] : prev.answers,
         score: isAllHotspotsFound ? prev.score + 1 : prev.score,
@@ -103,6 +138,8 @@ export const useGameState = () => {
       setState(prev => ({
         ...prev,
         attempts: prev.attempts + 1,
+        levelMisses: prev.levelMisses + 1,
+        totalMisses: prev.totalMisses + 1,
         missClicks: [...prev.missClicks, newMiss]
       }));
 
@@ -128,11 +165,13 @@ export const useGameState = () => {
         levelId: activeLevel.id,
         isCorrect: true,
         selectedSegmentIndex: index,
-        attemptsCount: state.attempts + 1
+        attemptsCount: state.attempts + 1,
+        missCount: state.levelMisses
       };
 
       setState(prev => ({
         ...prev,
+        attempts: prev.attempts + 1,
         answers: [...prev.answers, newAnswer],
         score: prev.score + 1,
         showFeedback: true
@@ -142,7 +181,9 @@ export const useGameState = () => {
       playSynthesizerNote('fail');
       setState(prev => ({
         ...prev,
-        attempts: prev.attempts + 1
+        attempts: prev.attempts + 1,
+        levelMisses: prev.levelMisses + 1,
+        totalMisses: prev.totalMisses + 1
       }));
 
       // Reset selection highlight after a delay so they can try again
@@ -166,6 +207,7 @@ export const useGameState = () => {
         pageView: 'result',
         showFeedback: false,
         attempts: 0,
+        levelMisses: 0,
         foundHotspot: false,
         foundHotspotIndices: [],
         selectedSegmentIndex: null,
@@ -177,6 +219,7 @@ export const useGameState = () => {
         currentLevelIndex: prev.currentLevelIndex + 1,
         showFeedback: false,
         attempts: 0,
+        levelMisses: 0,
         foundHotspot: false,
         foundHotspotIndices: [],
         selectedSegmentIndex: null,
@@ -192,6 +235,8 @@ export const useGameState = () => {
       gameMode: null,
       currentLevelIndex: 0,
       score: 0,
+      totalMisses: 0,
+      levelMisses: 0,
       answers: [],
       showFeedback: false,
       attempts: 0,
@@ -210,6 +255,7 @@ export const useGameState = () => {
     totalLevels: CAMPAIGN_LEVELS.length,
     levelsForMode: CAMPAIGN_LEVELS,
     score: state.score,
+    totalMisses: state.totalMisses,
     answers: state.answers,
     showFeedback: state.showFeedback,
     attempts: state.attempts,
