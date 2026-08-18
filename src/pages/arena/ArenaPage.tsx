@@ -153,12 +153,12 @@ export function ArenaPage({
         <div 
           id="badge-level-info" 
           onClick={handleSecretScoreClick}
-          className="absolute bottom-4 right-4 z-30 px-3.5 py-1.5 bg-[#041a32]/85 backdrop-blur-md border-2 border-[#1f568d]/60 rounded-xl text-[10px] sm:text-xs text-[#8fabc6] font-bold shadow-md flex items-center gap-2 cursor-pointer hover:border-[#388ce0] transition-colors"
+          className="absolute bottom-4 right-4 z-30 px-3.5 py-1.5 bg-[#041a32]/90 backdrop-blur-md border-2 border-[#1f568d]/60 rounded-xl text-xs sm:text-sm text-[#8fabc6] font-title tracking-wider shadow-lg flex items-center gap-2 cursor-pointer hover:border-[#388ce0] transition-colors"
           title="Kasus Investigasi (Klik 3x untuk Opsi Pengembang)"
         >
-          <span>Kasus {currentLevelIndex + 1} dari {totalLevels}: <span className="text-white font-title tracking-wide">{activeLevel.title}</span></span>
+          <span>Kasus {currentLevelIndex + 1} dari {totalLevels}: <span className="text-white tracking-wide">{activeLevel.title}</span></span>
           {activeLevel.type === 'image' && (
-            <span className="px-2 py-0.5 bg-[#062444] border border-[#1f568d]/60 text-[#f0c400] text-[9px] rounded-full font-mono font-bold">
+            <span className="px-2 py-0.5 bg-[#062444] border border-[#1f568d]/60 text-[#f0c400] text-[10px] sm:text-xs rounded-full font-title tracking-wider">
               🎯 {(foundHotspotIndices || []).length} / {currentHotspots.length} Anomali
             </span>
           )}
@@ -390,9 +390,9 @@ export function ArenaPage({
             <div id="arena-text-case-card" className="w-full max-w-2xl bg-[#041a32]/95 border-2 border-[#1f568d]/60 rounded-2xl p-5 sm:p-7 text-xs sm:text-sm leading-relaxed shadow-[0_12px_40px_rgba(0,0,0,0.65)] relative flex flex-col justify-between max-h-[75vh] sm:max-h-[85vh] overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#1f568d] via-[#388ce0] to-[#f0c400]"></div>
               
-              <div className="text-[10px] sm:text-xs text-[#8fabc6] border-b border-[#0f3b66] pb-2.5 mb-3 uppercase tracking-wider flex items-center justify-between shrink-0 font-mono font-bold">
+              <div className="text-[10px] sm:text-xs text-[#8fabc6] border-b border-[#0f3b66] pb-2.5 mb-3 uppercase tracking-wider flex items-center justify-between shrink-0 font-title">
                 <span>Bukti Dokumen #DOC-{activeLevel.id}</span>
-                <span className="px-2.5 py-0.5 bg-[#0a2f54]/70 border border-[#1f568d]/50 text-[#8fabc6] rounded font-mono">
+                <span className="px-2.5 py-0.5 bg-[#0a2f54]/70 border border-[#1f568d]/50 text-[#8fabc6] rounded font-title">
                   {activeLevel.category}
                 </span>
               </div>
@@ -440,8 +440,8 @@ export function ArenaPage({
                 </p>
               </div>
               
-              <div className="text-[9px] sm:text-[10px] text-[#8fabc6] border-t border-[#0f3b66] pt-2.5 mt-2 text-right uppercase shrink-0 font-mono flex items-center justify-between">
-                <span className="text-[#388ce0] font-bold">💡 Arahkan & klik kalimat yang memuat anomali</span>
+              <div className="text-[9px] sm:text-[10px] text-[#8fabc6] border-t border-[#0f3b66] pt-2.5 mt-2 text-right uppercase shrink-0 font-title tracking-wide flex items-center justify-between">
+                <span className="text-[#388ce0]">💡 Arahkan & klik kalimat yang memuat anomali</span>
                 <span>Pemeriksaan Dokumen</span>
               </div>
             </div>
