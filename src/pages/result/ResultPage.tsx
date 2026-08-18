@@ -13,7 +13,7 @@ interface ResultPageProps {
 export function ResultPage({ score, answers, onRestart, getRank, levels }: ResultPageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const rank = getRank(score);
-  const accuracy = Math.round((score / levels.length) * 100);
+  const accuracy = Math.min(100, Math.max(0, Math.round((score / levels.length) * 100)));
 
   return (
     <div id="result-page" className="h-screen w-screen bg-[#021324] relative flex flex-col items-center justify-center p-4 text-[#e2eaf4] scanlines overflow-hidden">

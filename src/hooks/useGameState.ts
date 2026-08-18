@@ -86,8 +86,8 @@ export const useGameState = () => {
       setState(prev => ({
         ...prev,
         foundHotspotIndices: updatedFoundIndices,
-        answers: [...prev.answers, newAnswer],
-        score: prev.score + 1,
+        answers: isAllHotspotsFound ? [...prev.answers, newAnswer] : prev.answers,
+        score: isAllHotspotsFound ? prev.score + 1 : prev.score,
         showFeedback: isAllHotspotsFound,
         foundHotspot: isAllHotspotsFound
       }));
