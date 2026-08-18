@@ -69,17 +69,23 @@ export function ArenaPage({
           <span>Panduan</span>
         </button>
 
-        {/* HUD: Bottom-Right Level Title Info Badge */}
-        <div 
-          id="badge-level-info" 
-          className="absolute bottom-4 right-4 z-30 px-3.5 py-1.5 bg-[#041a32]/90 backdrop-blur-md border-2 border-[#1f568d]/60 rounded-xl text-xs sm:text-sm text-[#8fabc6] font-title tracking-wider shadow-lg flex items-center gap-2 select-none"
-        >
-          <span>Kasus {currentLevelIndex + 1} dari {totalLevels}: <span className="text-white tracking-wide">{activeLevel.title}</span></span>
+        {/* HUD: Bottom-Right Level & Anomaly Info Badges */}
+        <div id="arena-hud-bottom-right" className="absolute bottom-4 right-4 z-30 flex items-center gap-2 select-none">
           {activeLevel.type === 'image' && (
-            <span className="px-2 py-0.5 bg-[#062444] border border-[#1f568d]/60 text-[#f0c400] text-[10px] sm:text-xs rounded-full font-title tracking-wider">
-              🎯 {(foundHotspotIndices || []).length} / {currentHotspots.length} Anomali
-            </span>
+            <div 
+              id="badge-anomaly-count"
+              className="px-3 py-1.5 bg-[#041a32]/90 backdrop-blur-md border-2 border-[#1f568d]/60 rounded-xl text-xs sm:text-sm text-[#f0c400] font-title tracking-wider shadow-lg flex items-center"
+            >
+              <span>{(foundHotspotIndices || []).length} / {currentHotspots.length} Anomali</span>
+            </div>
           )}
+
+          <div 
+            id="badge-level-info" 
+            className="px-3.5 py-1.5 bg-[#041a32]/90 backdrop-blur-md border-2 border-[#1f568d]/60 rounded-xl text-xs sm:text-sm text-[#8fabc6] font-title tracking-wider shadow-lg flex items-center"
+          >
+            <span>Kasus {currentLevelIndex + 1} dari {totalLevels}</span>
+          </div>
         </div>
 
         {/* Gameplay Area */}
