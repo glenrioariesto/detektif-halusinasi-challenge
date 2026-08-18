@@ -101,7 +101,7 @@ export function ArenaPage({
             </div>
           ) : (
             /* SPOT THE HALLUCINATION TEXT MODE */
-            <div id="arena-text-case-card" className="w-full max-w-2xl bg-[#041a32]/95 border-2 border-[#1f568d]/60 rounded-2xl p-5 sm:p-7 text-xs sm:text-sm leading-relaxed shadow-[0_12px_40px_rgba(0,0,0,0.65)] relative flex flex-col justify-between max-h-[75vh] sm:max-h-[85vh] overflow-hidden">
+            <div id="arena-text-case-card" className="w-full max-w-2xl lg:max-w-3xl 2xl:max-w-4xl bg-[#041a32]/95 border-2 border-[#1f568d]/60 rounded-2xl p-5 sm:p-7 text-xs sm:text-sm md:text-base leading-relaxed shadow-[0_12px_40px_rgba(0,0,0,0.65)] relative flex flex-col justify-between max-h-[75vh] sm:max-h-[85vh] overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#1f568d] via-[#388ce0] to-[#f0c400]"></div>
               
               <div className="text-[10px] sm:text-xs text-[#8fabc6] border-b border-[#0f3b66] pb-2.5 mb-3 uppercase tracking-wider flex items-center justify-between shrink-0 font-title">
