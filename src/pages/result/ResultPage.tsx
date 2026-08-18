@@ -23,7 +23,7 @@ export function ResultPage({ score, answers, onRestart, getRank, levels }: Resul
 
       <div className="z-10 max-w-3xl w-full flex flex-col items-center select-none animate-fadeIn">
         {/* Headings */}
-        <h2 id="result-page-title" className="text-lg sm:text-xl md:text-2xl font-extrabold font-display mb-3 sm:mb-4 text-center uppercase tracking-wide text-white shrink-0">
+        <h2 id="result-page-title" className="text-xl sm:text-2xl md:text-3xl font-normal font-title mb-3 sm:mb-4 text-center uppercase tracking-wide text-white shrink-0">
           Evaluasi Laporan Investigasi
         </h2>
 
@@ -58,11 +58,11 @@ export function ResultPage({ score, answers, onRestart, getRank, levels }: Resul
               Pangkat Kredibilitas
             </span>
             
-            <div className={`inline-flex self-start px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-mono font-bold mb-1.5 ${rank.color}`}>
+            <div className={`inline-flex self-start px-2.5 py-1 rounded text-[10px] sm:text-xs font-title font-normal tracking-wide mb-1.5 ${rank.color}`}>
               {rank.title}
             </div>
 
-            <p className="text-[#c8d5e3] text-[10px] sm:text-xs leading-relaxed mb-2 line-clamp-2 sm:line-clamp-none font-medium text-justify">
+            <p className="text-[#c8d5e3] text-[10px] sm:text-xs leading-relaxed mb-2 line-clamp-2 sm:line-clamp-none font-medium text-justify font-sans">
               {rank.desc}
             </p>
             
@@ -119,7 +119,7 @@ export function ResultPage({ score, answers, onRestart, getRank, levels }: Resul
 
               <div className="flex items-center gap-2 border-b border-[#0f3b66] pb-2 mb-4 shrink-0">
                 <BookOpen className="w-4 h-4 text-[#f0c400]" />
-                <h3 className="font-mono text-xs font-bold text-[#f0c400] uppercase tracking-wider">
+                <h3 className="font-title text-sm font-normal text-[#f0c400] uppercase tracking-wider">
                   Rekapitulasi Temuan Halusinasi
                 </h3>
               </div>

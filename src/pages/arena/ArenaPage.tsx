@@ -104,7 +104,7 @@ export function ArenaPage({
   };
 
   return (
-    <div id="arena-page" className="h-screen w-screen bg-[#021324] text-[#e2eaf4] flex items-center justify-center overflow-hidden relative select-none font-mono">
+    <div id="arena-page" className="h-screen w-screen bg-[#021324] text-[#e2eaf4] flex items-center justify-center overflow-hidden relative select-none font-sans">
       
       {/* Background Image with Dark Oceanic Atmosphere Overlay */}
       <img
@@ -156,7 +156,7 @@ export function ArenaPage({
           className="absolute bottom-4 right-4 z-30 px-3.5 py-1.5 bg-[#041a32]/85 backdrop-blur-md border-2 border-[#1f568d]/60 rounded-xl text-[10px] sm:text-xs text-[#8fabc6] font-bold shadow-md flex items-center gap-2 cursor-pointer hover:border-[#388ce0] transition-colors"
           title="Kasus Investigasi (Klik 3x untuk Opsi Pengembang)"
         >
-          <span>Kasus {currentLevelIndex + 1} dari {totalLevels}: <span className="text-white">{activeLevel.title}</span></span>
+          <span>Kasus {currentLevelIndex + 1} dari {totalLevels}: <span className="text-white font-title tracking-wide">{activeLevel.title}</span></span>
           {activeLevel.type === 'image' && (
             <span className="px-2 py-0.5 bg-[#062444] border border-[#1f568d]/60 text-[#f0c400] text-[9px] rounded-full font-mono font-bold">
               🎯 {(foundHotspotIndices || []).length} / {currentHotspots.length} Anomali
@@ -463,7 +463,7 @@ export function ArenaPage({
 
               <div className="flex items-center gap-2 border-b border-[#0f3b66] pb-1.5 sm:pb-2 mb-3 sm:mb-4 shrink-0">
                 <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#f0c400]" />
-                <h4 className="text-[10px] sm:text-xs font-bold text-[#f0c400] uppercase tracking-wider">
+                <h4 className="text-xs sm:text-sm font-normal text-[#f0c400] uppercase tracking-wider font-title">
                   Petunjuk Penyelidikan
                 </h4>
               </div>
@@ -517,7 +517,7 @@ export function ArenaPage({
                 <CheckCircle2 className="w-4 h-4 sm:w-6 sm:h-6 text-[#f0c400] animate-pulse" />
               </div>
 
-              <h3 className="text-xs sm:text-sm font-black text-[#f0c400] uppercase tracking-widest mb-0.5 sm:mb-1 shrink-0">
+              <h3 className="text-sm sm:text-base font-normal text-[#f0c400] uppercase tracking-widest mb-0.5 sm:mb-1 shrink-0 font-title">
                 ANOMALI TERKUNCI!
               </h3>
               <p className="text-[8px] sm:text-[9px] font-mono text-[#8fabc6] uppercase tracking-wider mb-2.5 sm:mb-4 shrink-0">

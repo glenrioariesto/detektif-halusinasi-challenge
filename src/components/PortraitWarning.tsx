@@ -20,7 +20,7 @@ export function PortraitWarning() {
         <RotateCw className="w-8 h-8 text-cyan-500 absolute -top-1 -right-1 animate-spin" />
       </div>
 
-      <h2 id="portrait-warning-title" className="text-sm font-black tracking-wider text-white mb-2 uppercase font-mono">
+      <h2 id="portrait-warning-title" className="text-sm sm:text-base font-normal tracking-wider text-white mb-2 uppercase font-title">
         Gunakan Orientasi Horizontal
       </h2>
       <p id="portrait-warning-desc" className="text-xs text-slate-400 max-w-xs leading-relaxed font-sans">

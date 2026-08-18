@@ -68,7 +68,7 @@ export default function App() {
               </div>
             </div>
 
-            <h3 className="text-lg sm:text-xl font-black text-white tracking-tight mb-2 uppercase font-mono">
+            <h3 className="text-xl sm:text-2xl font-normal text-white tracking-wide mb-2 uppercase font-title">
               Mode Layar Penuh
             </h3>
             
