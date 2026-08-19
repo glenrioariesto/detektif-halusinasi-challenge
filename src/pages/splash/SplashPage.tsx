@@ -1,7 +1,7 @@
 import React from 'react';
 import bgSplash from '../../assets/background.webp';
-import judulAtas from '../../assets/judul atas.webp';
-import judulBawah from '../../assets/judul bawah.webp';
+import judulAtas from '../../assets/judul atas baru@2x.webp';
+import judulBawah from '../../assets/judul bawah baru@2x.webp';
 import tombolMulai from '../../assets/tombol mulai.webp';
 import logoPusbuk from '../../assets/logo-pusbuk.webp';
 
@@ -32,8 +32,8 @@ export function SplashPage({ onStart }: SplashPageProps) {
 
       {/* Right Side Content Container */}
       <div id="splash-content-container" className="relative z-10 flex flex-col items-center text-center w-full max-w-[240px] xs:max-w-[280px] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-3xl mr-2 sm:mr-3 md:mr-6 lg:mr-8 xl:mr-12 2xl:mr-18">
-        {/* Judul Atas Asset */}
-        <div id="splash-title-top-container" className="w-full max-w-[200px] xs:max-w-[240px] sm:max-w-[290px] md:max-w-[350px] lg:max-w-[420px] xl:max-w-[490px] 2xl:max-w-[700px] mb-1.5 sm:mb-2 md:mb-2.5 lg:mb-3 xl:mb-4 2xl:mb-5 transition-all duration-300">
+        {/* Judul Atas Asset (Animasi Mengambang) */}
+        <div id="splash-title-top-container" className="w-full max-w-[200px] xs:max-w-[240px] sm:max-w-[290px] md:max-w-[350px] lg:max-w-[420px] xl:max-w-[490px] 2xl:max-w-[700px] mb-1.5 sm:mb-2 md:mb-2.5 lg:mb-3 xl:mb-4 2xl:mb-5 transition-all duration-300 animate-float-slow">
           <img
             id="splash-title-top-img"
             src={judulAtas}
@@ -42,8 +42,8 @@ export function SplashPage({ onStart }: SplashPageProps) {
           />
         </div>
 
-        {/* Judul Bawah Asset (Proporsional lebih panjang & lebar daripada judul atas) */}
-        <div id="splash-title-bottom-container" className="w-full max-w-[230px] xs:max-w-[280px] sm:max-w-[360px] md:max-w-[440px] lg:max-w-[530px] xl:max-w-[620px] 2xl:max-w-[880px] mb-4 sm:mb-6 md:mb-8 lg:mb-12 xl:mb-16 2xl:mb-36 transition-all duration-300">
+        {/* Judul Bawah Asset (Animasi Mengambang dengan Offset Delay) */}
+        <div id="splash-title-bottom-container" className="w-full max-w-[230px] xs:max-w-[280px] sm:max-w-[360px] md:max-w-[440px] lg:max-w-[530px] xl:max-w-[620px] 2xl:max-w-[880px] mb-4 sm:mb-6 md:mb-8 lg:mb-12 xl:mb-16 2xl:mb-36 transition-all duration-300 animate-float-delay">
           <img
             id="splash-title-bottom-img"
             src={judulBawah}
@@ -52,13 +52,13 @@ export function SplashPage({ onStart }: SplashPageProps) {
           />
         </div>
 
-        {/* Start Button Asset */}
+        {/* Start Button Asset (Animasi Pulsing / Glow) */}
         <button
           id="btn-start-game"
           type="button"
           onClick={onStart}
           aria-label="Mulai Investigasi"
-          className="group relative cursor-pointer focus:outline-none transition-all duration-300 hover:scale-105 active:scale-95 hover:drop-shadow-[0_0_28px_rgba(56,140,224,0.7)] drop-shadow-[0_0_14px_rgba(31,86,141,0.5)]"
+          className="group relative cursor-pointer focus:outline-none transition-all duration-300 hover:scale-110 active:scale-95 animate-button-pulse"
         >
           <img
             id="splash-btn-start-img"

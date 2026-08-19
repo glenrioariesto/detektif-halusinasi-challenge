@@ -4,6 +4,7 @@ import type { Level, MissClick } from '../../types';
 import { InteractiveImage } from '../../components/InteractiveImage';
 import arenaBg from '../../assets/background-gameplay.webp';
 import logoPusbuk from '../../assets/logo-pusbuk.webp';
+import judulLevel from '../../assets/judul level@2x.webp';
 
 interface ArenaPageProps {
   currentLevelIndex: number;
@@ -80,8 +81,8 @@ export function ArenaPage({
           <span>Panduan</span>
         </button>
 
-        {/* HUD: Bottom-Right Level & Anomaly Info Badges */}
-        <div id="arena-hud-bottom-right" className="absolute bottom-4 right-4 z-30 flex items-center gap-2 select-none">
+        {/* HUD: Bottom-Right Level Badge & Anomaly Info */}
+        <div id="arena-hud-bottom-right" className="absolute bottom-4 right-4 z-30 flex items-center gap-2.5 select-none">
           {activeLevel.type === 'image' && (
             <div 
               id="badge-anomaly-count"
@@ -91,11 +92,20 @@ export function ArenaPage({
             </div>
           )}
 
-          <div 
-            id="badge-level-info" 
-            className="px-3.5 py-1.5 bg-[#041a32]/90 backdrop-blur-md border-2 border-[#1f568d]/60 rounded-xl text-xs sm:text-sm text-[#8fabc6] font-title tracking-wider shadow-lg flex items-center"
-          >
-            <span>Kasus {currentLevelIndex + 1} dari {totalLevels}</span>
+          {/* Level Judul Graphic Badge in Bottom-Right */}
+          <div id="badge-level-judul-container" className="relative flex items-center justify-center animate-fadeIn drop-shadow-md">
+            <img
+              id="badge-level-judul-img"
+              src={judulLevel}
+              alt={`Kasus ${currentLevelIndex + 1}`}
+              className="h-8 sm:h-9 md:h-10 w-auto object-contain"
+            />
+            <span
+              id="badge-level-judul-text"
+              className="absolute inset-0 flex items-center justify-center font-title text-[#f0c400] text-xs sm:text-sm md:text-base font-normal tracking-wider uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pb-0.5 px-3"
+            >
+              Kasus {currentLevelIndex + 1}
+            </span>
           </div>
         </div>
 

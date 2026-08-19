@@ -48,16 +48,6 @@ body {
   color: #e2eaf4; /* Ice blue crisp text tint */
 }
 
-/* Reduced Motion Accessibility Settings */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-delay: 0s !important;
-    animation-duration: 0s !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0s !important;
-    scroll-behavior: auto !important;
-  }
-}
 
 /* Custom Scrollbars - Oceanic Detective Blue */
 ::-webkit-scrollbar {
@@ -127,3 +117,49 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Floating / Ngambang Animations */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes floatDelay {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes pulseGlowButton {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    filter: drop-shadow(0 0 14px rgba(31, 86, 141, 0.6));
+  }
+  50% {
+    transform: translateY(-6px) scale(1.06);
+    filter: drop-shadow(0 0 30px rgba(56, 140, 224, 0.95)) drop-shadow(0 0 15px rgba(240, 196, 0, 0.6));
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 3s ease-in-out infinite !important;
+  will-change: transform;
+}
+
+.animate-float-delay {
+  animation: floatDelay 3.4s ease-in-out 0.4s infinite !important;
+  will-change: transform;
+}
+
+.animate-button-pulse {
+  animation: pulseGlowButton 2s ease-in-out infinite !important;
+  will-change: transform, filter;
+}
+
