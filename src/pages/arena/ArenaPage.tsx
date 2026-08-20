@@ -145,7 +145,7 @@ export function ArenaPage({
                     const isSelected = selectedSegmentIndex === idx;
                     const isCorrectSeg = idx === activeLevel.correctSegmentIndex;
 
-                    let highlightClass = "text-[#e2eaf4] hover:bg-[#1f568d]/40 hover:text-white transition-colors duration-150 rounded decoration-dotted underline underline-offset-4 decoration-[#1f568d]/70 hover:decoration-[#388ce0]";
+                      let highlightClass = "text-[#e2eaf4] hover:bg-[#f0c400]/25 hover:text-[#f7d000] transition-colors duration-150 rounded decoration-dotted underline underline-offset-4 decoration-[#1f568d]/70 hover:decoration-[#388ce0]";
                     
                     if (showFeedback && isCorrectSeg) {
                       highlightClass = "bg-[#f0c400]/25 text-[#f7d000] font-semibold underline decoration-[#f0c400] underline-offset-4 glow-gold rounded px-0.5 shadow-sm";
