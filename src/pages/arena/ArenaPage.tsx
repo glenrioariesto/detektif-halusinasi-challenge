@@ -66,6 +66,27 @@ export function ArenaPage({
       {/* Immersive Game UI stretching to landscape screen bounds */}
       <div id="arena-ui-container" className="relative w-full h-full z-10 flex flex-col">
         
+        {/* HUD: Top-Center Level / Kasus Badge (matching detektif-digital-challenge) */}
+        <div
+          id="arena-case-tag"
+          className="absolute top-3 sm:top-4 md:top-6 lg:top-7 2xl:top-8 left-1/2 -translate-x-1/2 z-30 pointer-events-none select-none animate-fadeIn"
+        >
+          <div className="relative shrink-0 w-[min(28vw,9rem)] sm:w-[min(24vw,11rem)] md:w-[min(28vw,13rem)] xl:w-[min(34vw,18rem)] 2xl:w-[22rem]">
+            <img
+              id="badge-level-judul-img"
+              src={judulLevel}
+              alt={`Kasus ${currentLevelIndex + 1}`}
+              className="w-full h-auto object-contain drop-shadow-[0_6px_14px_rgba(0,0,0,0.7)]"
+            />
+            <span
+              id="badge-level-judul-text"
+              className="absolute inset-0 flex items-center justify-center font-title text-[#f0c400] text-[9px] sm:text-xs md:text-sm lg:text-base xl:text-2xl 2xl:text-3xl tracking-wider uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pb-0.5 px-3"
+            >
+              Kasus {currentLevelIndex + 1}
+            </span>
+          </div>
+        </div>
+
         {/* HUD: Bottom-Left Gameplay Guide Button */}
         <button
           id="btn-open-guide"
@@ -81,36 +102,20 @@ export function ArenaPage({
           <span>Panduan</span>
         </button>
 
-        {/* HUD: Bottom-Right Level Badge & Anomaly Info */}
-        <div id="arena-hud-bottom-right" className="absolute bottom-4 right-4 z-30 flex items-center gap-2.5 select-none">
-          {activeLevel.type === 'image' && (
+        {/* HUD: Bottom-Right Anomaly Info (Image Mode only) */}
+        {activeLevel.type === 'image' && (
+          <div id="arena-hud-bottom-right" className="absolute bottom-4 right-4 z-30 flex items-center gap-2.5 select-none">
             <div 
               id="badge-anomaly-count"
               className="px-3 py-1.5 bg-[#041a32]/90 backdrop-blur-md border-2 border-[#1f568d]/60 rounded-xl text-xs sm:text-sm text-[#f0c400] font-title tracking-wider shadow-lg flex items-center"
             >
               <span>{(foundHotspotIndices || []).length} / {currentHotspots.length} Anomali</span>
             </div>
-          )}
-
-          {/* Level Judul Graphic Badge in Bottom-Right */}
-          <div id="badge-level-judul-container" className="relative flex items-center justify-center animate-fadeIn drop-shadow-md">
-            <img
-              id="badge-level-judul-img"
-              src={judulLevel}
-              alt={`Kasus ${currentLevelIndex + 1}`}
-              className="h-8 sm:h-9 md:h-10 w-auto object-contain"
-            />
-            <span
-              id="badge-level-judul-text"
-              className="absolute inset-0 flex items-center justify-center font-title text-[#f0c400] text-xs sm:text-sm md:text-base font-normal tracking-wider uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] pb-0.5 px-3"
-            >
-              Kasus {currentLevelIndex + 1}
-            </span>
           </div>
-        </div>
+        )}
 
         {/* Gameplay Area */}
-        <div id="arena-gameplay-area" className="flex-1 flex items-center justify-center p-6 min-h-0 relative select-none">
+        <div id="arena-gameplay-area" className="flex-1 flex items-center justify-center px-4 pt-14 pb-12 sm:px-6 sm:pt-16 sm:pb-14 md:pt-20 md:pb-16 min-h-0 relative select-none">
           {activeLevel.type === 'image' && activeLevel.imageUrl ? (
             /* SPOT THE ANOMALY PICTURE MODE */
             <div id="arena-image-mode-wrapper" className="w-full h-full flex items-center justify-center p-2 sm:p-4">
@@ -128,7 +133,7 @@ export function ArenaPage({
             </div>
           ) : (
             /* SPOT THE HALLUCINATION TEXT MODE */
-            <div id="arena-text-case-card" className="w-full max-w-2xl lg:max-w-3xl 2xl:max-w-4xl bg-[#041a32]/95 border-2 border-[#1f568d]/60 rounded-2xl p-5 sm:p-7 text-xs sm:text-sm md:text-base leading-relaxed shadow-[0_12px_40px_rgba(0,0,0,0.65)] relative flex flex-col justify-between max-h-[75vh] sm:max-h-[85vh] overflow-hidden">
+            <div id="arena-text-case-card" className="w-full max-w-2xl lg:max-w-3xl 2xl:max-w-4xl bg-[#041a32]/95 border-2 border-[#1f568d]/60 rounded-2xl p-5 sm:p-7 text-xs sm:text-sm md:text-base leading-relaxed shadow-[0_12px_40px_rgba(0,0,0,0.65)] relative flex flex-col justify-between max-h-[72vh] sm:max-h-[78vh] 2xl:max-h-[80vh] overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#1f568d] via-[#388ce0] to-[#f0c400]"></div>
               
               <div className="text-[10px] sm:text-xs text-[#8fabc6] border-b border-[#0f3b66] pb-2.5 mb-3 uppercase tracking-wider flex items-center justify-between shrink-0 font-title">
