@@ -164,6 +164,11 @@ export default function App() {
           levels={levelsForMode}
         />
       )}
+
+      {/* Footer Copyright */}
+      <footer className="fixed bottom-1 left-0 right-0 z-40 text-center pointer-events-none select-none text-[10px] text-white/50 font-medium tracking-wide">
+        Copyright 2026 Pusat Perbukuan
+      </footer>
     </div>
   );
 }
