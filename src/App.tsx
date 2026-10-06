@@ -165,10 +165,12 @@ export default function App() {
         />
       )}
 
-      {/* Footer Copyright */}
-      <footer className="fixed bottom-1 left-0 right-0 z-40 text-center pointer-events-none select-none text-[10px] text-white/50 font-medium tracking-wide">
-        Copyright 2026 Pusat Perbukuan
-      </footer>
+      {/* Footer Copyright: Hanya tampil di halaman tanpa kontrol (Splash & Result) */}
+      {pageView !== 'arena' && (
+        <footer className="fixed bottom-1.5 left-0 right-0 z-40 text-center pointer-events-none select-none text-[10px] text-[#8fabc6] font-medium tracking-wide">
+          Copyright 2026 Pusat Perbukuan
+        </footer>
+      )}
     </div>
   );
 }
