@@ -3,7 +3,7 @@ import bgSplash from '../../assets/background.webp';
 import judulAtas from '../../assets/judul atas baru@2x.webp';
 import judulBawah from '../../assets/judul bawah baru@2x.webp';
 import tombolMulai from '../../assets/tombol mulai.webp';
-import logoPusbuk from '../../assets/logo-pusbuk.webp';
+import logoJenama from '../../assets/logo-jenama.webp?v2';
 
 interface SplashPageProps {
   onStart: () => void;
@@ -24,9 +24,9 @@ export function SplashPage({ onStart }: SplashPageProps) {
       <div id="splash-logo-container" className="absolute top-3 left-3 sm:top-5 sm:left-5 md:top-6 md:left-6 lg:top-8 lg:left-8 2xl:top-10 2xl:left-10 z-20 shrink-0 animate-fadeIn">
         <img
           id="splash-logo-pusbuk"
-          src={logoPusbuk}
+          src={logoJenama}
           alt="Logo Pusbuk"
-          className="h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 2xl:h-20 w-auto object-contain drop-shadow-md"
+          className="h-10 sm:h-12 md:h-14 lg:h-16 xl:h-18 2xl:h-24 w-auto object-contain drop-shadow-md"
         />
       </div>
 
