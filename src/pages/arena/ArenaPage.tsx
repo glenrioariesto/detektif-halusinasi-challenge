@@ -66,13 +66,13 @@ export function ArenaPage({
       />
       <div id="arena-bg-overlay" className="absolute inset-0 bg-gradient-to-t from-[#021324]/90 via-[#021324]/60 to-[#021324]/80 z-1 pointer-events-none"></div>
 
-      {/* HUD: Top-Left Pusbuk Logo (matching Splash layout) */}
-      <div id="arena-logo-container" className="absolute top-3 left-3 sm:top-5 sm:left-5 md:top-6 md:left-6 2xl:top-10 2xl:left-10 z-30 shrink-0 pointer-events-none select-none animate-fadeIn">
+      {/* HUD: Top-Left Pusbuk Logo (matching detektif-digital-challenge) */}
+      <div id="arena-logo-container" className="absolute top-3 left-3 sm:top-4 sm:left-4 md:top-5 md:left-5 z-30 shrink-0 pointer-events-none select-none animate-fadeIn">
         <img
           id="arena-logo-pusbuk"
           src={logoJenama}
           alt="Logo Pusbuk"
-          className="h-10 sm:h-12 md:h-14 lg:h-16 xl:h-18 2xl:h-24 w-auto object-contain drop-shadow-md"
+          className="h-8 sm:h-11 md:h-14 lg:h-16 xl:h-20 w-auto object-contain drop-shadow-[0_6px_12px_rgba(56,69,91,0.45)]"
         />
       </div>
 
