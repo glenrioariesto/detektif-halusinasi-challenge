@@ -116,16 +116,25 @@ export const useGameState = () => {
         attemptsCount: state.attempts + 1,
         missCount: state.levelMisses
       };
-      
-      setState(prev => ({
-        ...prev,
-        attempts: prev.attempts + 1,
-        foundHotspotIndices: updatedFoundIndices,
-        answers: isAllHotspotsFound ? [...prev.answers, newAnswer] : prev.answers,
-        score: isAllHotspotsFound ? prev.score + 1 : prev.score,
-        showFeedback: isAllHotspotsFound,
-        foundHotspot: isAllHotspotsFound
-      }));
+
+      setState(prev => {
+        const updatedAnswers = isAllHotspotsFound
+          ? (prev.answers.some(a => a.levelId === activeLevel.id)
+              ? prev.answers.map(a => a.levelId === activeLevel.id ? newAnswer : a)
+              : [...prev.answers, newAnswer])
+          : prev.answers;
+        const newScore = updatedAnswers.filter(a => a.isCorrect).length;
+
+        return {
+          ...prev,
+          attempts: prev.attempts + 1,
+          foundHotspotIndices: updatedFoundIndices,
+          answers: updatedAnswers,
+          score: newScore,
+          showFeedback: isAllHotspotsFound,
+          foundHotspot: isAllHotspotsFound
+        };
+      });
     } else {
       // Incorrect click (miss!)
       playSynthesizerNote('fail');
@@ -169,13 +178,20 @@ export const useGameState = () => {
         missCount: state.levelMisses
       };
 
-      setState(prev => ({
-        ...prev,
-        attempts: prev.attempts + 1,
-        answers: [...prev.answers, newAnswer],
-        score: prev.score + 1,
-        showFeedback: true
-      }));
+      setState(prev => {
+        const updatedAnswers = prev.answers.some(a => a.levelId === activeLevel.id)
+          ? prev.answers.map(a => a.levelId === activeLevel.id ? newAnswer : a)
+          : [...prev.answers, newAnswer];
+        const newScore = updatedAnswers.filter(a => a.isCorrect).length;
+
+        return {
+          ...prev,
+          attempts: prev.attempts + 1,
+          answers: updatedAnswers,
+          score: newScore,
+          showFeedback: true
+        };
+      });
     } else {
       // Incorrect segment selection
       playSynthesizerNote('fail');
@@ -196,11 +212,37 @@ export const useGameState = () => {
     }
   };
 
+  const jumpToLevel = (levelIndex: number) => {
+    if (levelIndex < 0 || levelIndex >= CAMPAIGN_LEVELS.length) return;
+    if (levelIndex === state.currentLevelIndex) return;
+
+    playSynthesizerNote('btn');
+    const targetLevel = CAMPAIGN_LEVELS[levelIndex];
+    const existingAnswer = state.answers.find(a => a.levelId === targetLevel.id);
+    const targetHotspots = targetLevel.hotspots || (targetLevel.hotspot ? [targetLevel.hotspot] : []);
+
+    setState(prev => ({
+      ...prev,
+      currentLevelIndex: levelIndex,
+      showFeedback: !!existingAnswer?.isCorrect,
+      attempts: existingAnswer ? existingAnswer.attemptsCount : 0,
+      levelMisses: existingAnswer?.missCount || 0,
+      foundHotspot: !!existingAnswer?.isCorrect,
+      foundHotspotIndices: existingAnswer?.isCorrect ? targetHotspots.map((_, idx) => idx) : [],
+      selectedSegmentIndex: existingAnswer?.selectedSegmentIndex ?? null,
+      missClicks: []
+    }));
+  };
+
   const advanceLevel = () => {
     playSynthesizerNote('btn');
-    const isLastLevel = state.currentLevelIndex === CAMPAIGN_LEVELS.length - 1;
 
-    if (isLastLevel) {
+    // Check if all levels in campaign have been completed
+    const allCompleted = CAMPAIGN_LEVELS.every(l =>
+      state.answers.some(a => a.levelId === l.id && a.isCorrect)
+    );
+
+    if (allCompleted) {
       playSynthesizerNote('unlock');
       setState(prev => ({
         ...prev,
@@ -213,19 +255,47 @@ export const useGameState = () => {
         selectedSegmentIndex: null,
         missClicks: []
       }));
-    } else {
-      setState(prev => ({
-        ...prev,
-        currentLevelIndex: prev.currentLevelIndex + 1,
-        showFeedback: false,
-        attempts: 0,
-        levelMisses: 0,
-        foundHotspot: false,
-        foundHotspotIndices: [],
-        selectedSegmentIndex: null,
-        missClicks: []
-      }));
+      return;
     }
+
+    // Try next sequential level first, or wrap around to find first uncompleted level
+    let nextIndex = state.currentLevelIndex + 1;
+    if (nextIndex >= CAMPAIGN_LEVELS.length) {
+      nextIndex = CAMPAIGN_LEVELS.findIndex(l =>
+        !state.answers.some(a => a.levelId === l.id && a.isCorrect)
+      );
+      if (nextIndex === -1) {
+        playSynthesizerNote('unlock');
+        setState(prev => ({
+          ...prev,
+          pageView: 'result',
+          showFeedback: false,
+          attempts: 0,
+          levelMisses: 0,
+          foundHotspot: false,
+          foundHotspotIndices: [],
+          selectedSegmentIndex: null,
+          missClicks: []
+        }));
+        return;
+      }
+    }
+
+    const nextLevel = CAMPAIGN_LEVELS[nextIndex];
+    const existingAnswer = state.answers.find(a => a.levelId === nextLevel.id);
+    const nextHotspots = nextLevel.hotspots || (nextLevel.hotspot ? [nextLevel.hotspot] : []);
+
+    setState(prev => ({
+      ...prev,
+      currentLevelIndex: nextIndex,
+      showFeedback: !!existingAnswer?.isCorrect,
+      attempts: existingAnswer ? existingAnswer.attemptsCount : 0,
+      levelMisses: existingAnswer?.missCount || 0,
+      foundHotspot: !!existingAnswer?.isCorrect,
+      foundHotspotIndices: existingAnswer?.isCorrect ? nextHotspots.map((_, idx) => idx) : [],
+      selectedSegmentIndex: existingAnswer?.selectedSegmentIndex ?? null,
+      missClicks: []
+    }));
   };
 
   const restartGame = () => {
@@ -267,6 +337,7 @@ export const useGameState = () => {
     handleImageClick,
     handleSegmentClick,
     advanceLevel,
+    jumpToLevel,
     restartGame,
     getRank
   };

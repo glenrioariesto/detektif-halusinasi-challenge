@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CheckCircle2, ArrowRight, X, BookOpen, Target, ImageIcon, FileText, Award, ChevronLeft, ChevronRight, Check } from 'lucide-react';
-import type { Level, MissClick } from '../../types';
+import type { Level, MissClick, UserLevelAnswer } from '../../types';
+import { CAMPAIGN_LEVELS } from '../../data/questions';
 import { InteractiveImage } from '../../components/InteractiveImage';
 import arenaBg from '../../assets/background-gameplay.webp';
 import logoJenama from '../../assets/logo-jenama.webp?v2';
@@ -17,9 +18,11 @@ interface ArenaPageProps {
   foundHotspotIndices: number[];
   selectedSegmentIndex: number | null;
   missClicks: MissClick[];
+  answers: UserLevelAnswer[];
   onImageClick: (x: number, y: number) => void;
   onSegmentClick: (index: number) => void;
   onAdvance: () => void;
+  onJumpToLevel: (levelIndex: number) => void;
 }
 
 export function ArenaPage({
@@ -30,16 +33,26 @@ export function ArenaPage({
   foundHotspotIndices = [],
   selectedSegmentIndex,
   missClicks,
+  answers = [],
   onImageClick,
   onSegmentClick,
-  onAdvance
+  onAdvance,
+  onJumpToLevel
 }: ArenaPageProps) {
   
   const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [guideSlide, setGuideSlide] = useState(0);
+  const [dismissedFeedbackLevelId, setDismissedFeedbackLevelId] = useState<number | null>(null);
 
   // Normalize hotspots list for current level
   const currentHotspots = activeLevel.hotspots || (activeLevel.hotspot ? [activeLevel.hotspot] : []);
+
+  // Answer status for current level and entire campaign
+  const isCurrentAnswered = answers.some(a => a.levelId === activeLevel.id && a.isCorrect);
+  const allCompleted = totalLevels > 0 && answers.filter(a => a.isCorrect).length >= totalLevels;
+
+  // Feedback visibility: show automatically when solved, or can be reopened/dismissed
+  const isFeedbackVisible = (showFeedback || isCurrentAnswered) && dismissedFeedbackLevelId !== activeLevel.id;
 
   return (
     <div id="arena-page" className="h-screen w-screen bg-[#021324] text-[#e2eaf4] flex items-center justify-center overflow-hidden relative select-none font-sans">
@@ -87,20 +100,35 @@ export function ArenaPage({
           </div>
         </div>
 
-        {/* HUD: Bottom-Left Gameplay Guide Button */}
-        <button
-          id="btn-open-guide"
-          type="button"
-          onClick={() => {
-            setIsGuideOpen(true);
-            setGuideSlide(0);
-          }}
-          className="absolute bottom-4 left-4 z-30 px-3.5 py-1.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#f0c400]/70 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm text-[#f0c400] hover:text-white font-title tracking-wider transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 glow-gold"
-          title="Buka Panduan Cara Bermain"
-        >
-          <BookOpen className="w-4 h-4 text-[#f0c400]" />
-          <span>Panduan</span>
-        </button>
+        {/* HUD: Bottom-Left Controls: Gameplay Guide & Review Button */}
+        <div id="arena-hud-bottom-left" className="absolute bottom-4 left-4 z-30 flex items-center gap-2 select-none">
+          <button
+            id="btn-open-guide"
+            type="button"
+            onClick={() => {
+              setIsGuideOpen(true);
+              setGuideSlide(0);
+            }}
+            className="px-3.5 py-1.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#f0c400]/70 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm text-[#f0c400] hover:text-white font-title tracking-wider transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 glow-gold"
+            title="Buka Panduan Cara Bermain"
+          >
+            <BookOpen className="w-4 h-4 text-[#f0c400]" />
+            <span>Panduan</span>
+          </button>
+
+          {isCurrentAnswered && (
+            <button
+              id="btn-reopen-feedback"
+              type="button"
+              onClick={() => setDismissedFeedbackLevelId(null)}
+              className="px-3.5 py-1.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-emerald-400/80 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm text-emerald-300 hover:text-white font-title tracking-wider transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 glow-ocean"
+              title="Buka Ulasan & Penjelasan Kasus Ini"
+            >
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <span>Ulasan Kasus</span>
+            </button>
+          )}
+        </div>
 
         {/* HUD: Bottom-Right Anomaly Info (Image Mode only) */}
         {activeLevel.type === 'image' && (
@@ -114,8 +142,57 @@ export function ArenaPage({
           </div>
         )}
 
+        {/* Right Side: Level Selector in Cyber Oceanic Detective Theme (Level 1 - 10) - Centered Vertically */}
+        <div
+          id="arena-level-selector"
+          className="absolute right-2 sm:right-3 md:right-4 xl:right-5 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center gap-1 sm:gap-1.5 bg-gradient-to-b from-[#041a32]/95 via-[#062444]/95 to-[#021324]/95 backdrop-blur-md border-2 border-[#1f568d]/80 shadow-[0_8px_30px_rgba(0,0,0,0.65)] glow-ocean rounded-2xl sm:rounded-3xl p-1 sm:p-1.5 md:p-2 select-none pointer-events-auto"
+        >
+          {Array.from({ length: totalLevels }, (_, i) => {
+            const levelNum = i + 1;
+            const isCurrent = i === currentLevelIndex;
+            const level = CAMPAIGN_LEVELS[i];
+            const answer = answers.find(a => a.levelId === level?.id);
+            const isAnswered = !!answer;
+            const isCorrect = answer?.isCorrect;
+
+            return (
+              <button
+                key={levelNum}
+                id={`arena-level-btn-${levelNum}`}
+                type="button"
+                onClick={() => {
+                  setDismissedFeedbackLevelId(null);
+                  onJumpToLevel(i);
+                }}
+                className={`relative w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-8.5 lg:h-8.5 2xl:w-10 2xl:h-10 rounded-lg sm:rounded-xl font-title text-[11px] sm:text-xs md:text-sm 2xl:text-base font-bold flex items-center justify-center transition-all duration-200 cursor-pointer ${
+                  isCurrent
+                    ? 'bg-[#f0c400] text-[#021324] ring-2 sm:ring-3 ring-[#f0c400]/60 scale-110 shadow-lg font-black z-10 glow-gold'
+                    : isAnswered
+                    ? isCorrect
+                      ? 'bg-emerald-600/95 text-white hover:bg-emerald-500 hover:scale-105 border border-emerald-400/80 shadow-xs'
+                      : 'bg-[#0c3258]/80 text-[#8fabc6] hover:bg-[#124270] hover:text-[#f0c400] hover:scale-105 border border-[#1f568d]/50 shadow-xs'
+                    : 'bg-[#0c3258]/50 text-[#8fabc6] hover:bg-[#124270] hover:text-white hover:border-[#388ce0]/80 hover:scale-105 border border-[#1f568d]/40 shadow-xs'
+                }`}
+                title={`Kasus ${levelNum} (${level?.type === 'image' ? 'Citra' : 'Teks'}): ${level?.title || ''}${
+                  isAnswered ? (isCorrect ? ' (Terpecahkan)' : ' (Selesai)') : ' (Klik untuk pindah kasus)'
+                }`}
+              >
+                <span>{levelNum}</span>
+                {/* Status Indicator Badge */}
+                {isAnswered && (
+                  <span
+                    className={`absolute -top-0.5 -right-0.5 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full border border-[#041a32] ${
+                      isCorrect ? 'bg-emerald-400' : 'bg-rose-500'
+                    }`}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
+
         {/* Gameplay Area */}
-        <div id="arena-gameplay-area" className="flex-1 flex items-center justify-center px-4 pt-14 pb-12 sm:px-6 sm:pt-16 sm:pb-14 md:pt-20 md:pb-16 min-h-0 relative select-none">
+        <div id="arena-gameplay-area" className="flex-1 flex items-center justify-center px-8 sm:px-12 md:px-16 lg:px-20 pt-14 pb-12 sm:pt-16 sm:pb-14 md:pt-20 md:pb-16 min-h-0 relative select-none">
           {activeLevel.type === 'image' && activeLevel.imageUrl ? (
             /* SPOT THE ANOMALY PICTURE MODE */
             <div id="arena-image-mode-wrapper" className="w-full h-full flex items-center justify-center p-2 sm:p-4">
@@ -125,10 +202,10 @@ export function ArenaPage({
                 hotspot={activeLevel.hotspot}
                 hotspots={activeLevel.hotspots}
                 foundHotspotIndices={foundHotspotIndices}
-                found={showFeedback}
+                found={showFeedback || isCurrentAnswered}
                 missClicks={missClicks}
                 onClick={onImageClick}
-                disabled={showFeedback}
+                disabled={showFeedback || isCurrentAnswered}
               />
             </div>
           ) : (
@@ -152,7 +229,7 @@ export function ArenaPage({
 
                       let highlightClass = "text-[#e2eaf4] hover:bg-[#f0c400]/25 hover:text-[#f7d000] transition-colors duration-150 rounded decoration-dotted underline underline-offset-4 decoration-[#1f568d]/70 hover:decoration-[#388ce0]";
                     
-                    if (showFeedback && isCorrectSeg) {
+                    if ((showFeedback || isCurrentAnswered) && isCorrectSeg) {
                       highlightClass = "bg-[#f0c400]/25 text-[#f7d000] font-semibold underline decoration-[#f0c400] underline-offset-4 glow-gold rounded px-0.5 shadow-sm";
                     } else if (isSelected) {
                       if (isCorrectSeg) {
@@ -167,17 +244,17 @@ export function ArenaPage({
                         key={`seg-${idx}`}
                         id={`text-segment-${idx}`}
                         role="button"
-                        tabIndex={showFeedback ? -1 : 0}
-                        onClick={() => !showFeedback && onSegmentClick(idx)}
+                        tabIndex={(showFeedback || isCurrentAnswered) ? -1 : 0}
+                        onClick={() => !(showFeedback || isCurrentAnswered) && onSegmentClick(idx)}
                         onKeyDown={(e) => {
-                          if (!showFeedback && (e.key === 'Enter' || e.key === ' ')) {
+                          if (!(showFeedback || isCurrentAnswered) && (e.key === 'Enter' || e.key === ' ')) {
                             e.preventDefault();
                             onSegmentClick(idx);
                           }
                         }}
                         className={`inline cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#388ce0] ${highlightClass}`}
-                        style={{ pointerEvents: showFeedback ? 'none' : 'auto' }}
-                        title="Klik untuk memilih kalimat ini"
+                        style={{ pointerEvents: (showFeedback || isCurrentAnswered) ? 'none' : 'auto' }}
+                        title={isCurrentAnswered ? "Kasus ini telah terpecahkan" : "Klik untuk memilih kalimat ini"}
                       >
                         {seg}
                       </span>
@@ -327,10 +404,20 @@ export function ArenaPage({
         )}
 
         {/* MODAL 2: FEEDBACK / REVEAL OVERLAY */}
-        {showFeedback && (
+        {isFeedbackVisible && (
           <div id="modal-feedback-reveal" className="absolute inset-0 bg-black/85 backdrop-blur-md z-45 flex items-center justify-center p-4 animate-fadeIn">
             <div id="modal-feedback-card" className="w-full max-w-md bg-[#041a32] border-2 border-[#f0c400] rounded-2xl p-4 sm:p-5 shadow-[0_0_35px_rgba(240,196,0,0.35)] relative text-center max-h-[90vh] overflow-y-auto flex flex-col justify-center text-[#e2eaf4]">
-              
+              {/* Dismiss X button */}
+              <button
+                id="btn-dismiss-feedback-x"
+                type="button"
+                onClick={() => setDismissedFeedbackLevelId(activeLevel.id)}
+                className="absolute top-3 right-3 text-[#8fabc6] hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                title="Tutup Ulasan"
+              >
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+
               {/* Correctness Header */}
               <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[#062444] border-2 border-[#f0c400] flex items-center justify-center mx-auto mb-2 sm:mb-3 glow-gold shrink-0">
                 <CheckCircle2 className="w-4 h-4 sm:w-6 sm:h-6 text-[#f0c400] animate-pulse" />
@@ -340,25 +427,41 @@ export function ArenaPage({
                 ANOMALI TERKUNCI!
               </h3>
               <p className="text-[8px] sm:text-[9px] font-mono text-[#8fabc6] uppercase tracking-wider mb-2.5 sm:mb-4 shrink-0">
-                Analisis Kebenaran Faktual
+                Kasus {currentLevelIndex + 1}: {activeLevel.title}
               </p>
 
               {/* Reveal details */}
-              <div className="bg-[#062444]/60 border border-[#1f568d]/50 rounded-xl p-3 sm:p-4 mb-3 sm:mb-5 text-left max-h-[100px] sm:max-h-[160px] overflow-y-auto shrink-0">
+              <div className="bg-[#062444]/60 border border-[#1f568d]/50 rounded-xl p-3 sm:p-4 mb-3 sm:mb-5 text-left max-h-[120px] sm:max-h-[160px] overflow-y-auto shrink-0">
                 <p className="text-[11px] sm:text-xs text-[#e2eaf4] leading-relaxed font-sans font-medium text-justify">
                   {activeLevel.explanation}
                 </p>
               </div>
 
-              <button
-                id="btn-advance-level"
-                type="button"
-                onClick={onAdvance}
-                className="w-full py-2.5 sm:py-3 bg-gradient-to-r from-[#1f568d] via-[#256eb4] to-[#022949] hover:from-[#2877c2] hover:to-[#043660] border border-[#388ce0]/60 text-white rounded-xl text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-[0_0_20px_rgba(31,86,141,0.4)] hover:shadow-[0_0_25px_rgba(56,140,224,0.6)] hover:scale-[1.02] active:scale-98 shrink-0"
-              >
-                <span>{currentLevelIndex === totalLevels - 1 ? 'Lihat Hasil Akhir' : 'Lanjut ke Kasus Berikutnya'}</span>
-                <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.5px] text-white" />
-              </button>
+              <div className="flex items-center gap-2 w-full shrink-0">
+                <button
+                  id="btn-close-feedback"
+                  type="button"
+                  onClick={() => setDismissedFeedbackLevelId(activeLevel.id)}
+                  className="px-3.5 sm:px-4 py-2.5 sm:py-3 bg-[#062444] hover:bg-[#0d3b6c] border border-[#1f568d] text-[#8fabc6] hover:text-white rounded-xl text-[10px] sm:text-xs font-bold transition-all cursor-pointer active:scale-98 shrink-0"
+                >
+                  Tutup
+                </button>
+                <button
+                  id="btn-advance-level"
+                  type="button"
+                  onClick={onAdvance}
+                  className="flex-1 py-2.5 sm:py-3 bg-gradient-to-r from-[#1f568d] via-[#256eb4] to-[#022949] hover:from-[#2877c2] hover:to-[#043660] border border-[#388ce0]/60 text-white rounded-xl text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-[0_0_20px_rgba(31,86,141,0.4)] hover:shadow-[0_0_25px_rgba(56,140,224,0.6)] hover:scale-[1.02] active:scale-98"
+                >
+                  <span>
+                    {allCompleted
+                      ? 'Lihat Hasil Akhir'
+                      : currentLevelIndex === totalLevels - 1
+                      ? 'Lanjut ke Kasus Belum Selesai'
+                      : 'Lanjut ke Kasus Berikutnya'}
+                  </span>
+                  <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.5px] text-white" />
+                </button>
+              </div>
             </div>
           </div>
         )}

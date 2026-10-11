@@ -27,6 +27,7 @@ export default function App() {
     handleImageClick,
     handleSegmentClick,
     advanceLevel,
+    jumpToLevel,
     restartGame,
     getRank
   } = useGameState();
@@ -148,9 +149,11 @@ export default function App() {
           foundHotspotIndices={foundHotspotIndices}
           selectedSegmentIndex={selectedSegmentIndex}
           missClicks={missClicks}
+          answers={answers}
           onImageClick={handleImageClick}
           onSegmentClick={handleSegmentClick}
           onAdvance={advanceLevel}
+          onJumpToLevel={jumpToLevel}
         />
       )}
 
