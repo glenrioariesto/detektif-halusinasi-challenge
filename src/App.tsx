@@ -197,7 +197,7 @@ export default function App() {
 
       {/* Footer Copyright: Tampil di semua halaman (Splash = hitam, Ingame & Result = putih) */}
       <footer
-        className={`fixed bottom-1.5 left-0 right-0 z-40 text-center pointer-events-none select-none text-[10px] sm:text-xs font-['CCRegeneration','CC_Regeneration',sans-serif] tracking-wider drop-shadow-sm ${
+        className={`fixed bottom-1.5 left-0 right-0 z-40 text-center pointer-events-none select-none text-[10px] sm:text-xs font-['CCRegeneration','CC_Regeneration',sans-serif] tracking-wider ${
           pageView === 'splash' ? 'text-black' : 'text-white'
         }`}
       >
