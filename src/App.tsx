@@ -5,6 +5,7 @@ import { SplashPage } from './pages/splash/SplashPage';
 import { ArenaPage } from './pages/arena/ArenaPage';
 import { ResultPage } from './pages/result/ResultPage';
 import { PortraitWarning } from './components/PortraitWarning';
+import { ObjectivesModal } from './components/ObjectivesModal';
 import { toggleMute, getIsMuted, startBGM } from './utils/audio';
 
 export default function App() {
@@ -33,16 +34,31 @@ export default function App() {
   } = useGameState();
 
   const [showFullscreenPrompt, setShowFullscreenPrompt] = useState(false);
+  const [showObjectivesModal, setShowObjectivesModal] = useState(false);
+  const [isOpenedFromSplash, setIsOpenedFromSplash] = useState(false);
   const [isMutedState, setIsMutedState] = useState(getIsMuted());
 
   const handleStartGame = () => {
     startBGM();
-    const isFullscreenSupported = typeof document !== 'undefined' && !!document.documentElement.requestFullscreen;
-    const isCurrentlyFullscreen = typeof document !== 'undefined' && !!document.fullscreenElement;
-    if (isFullscreenSupported && !isCurrentlyFullscreen) {
-      setShowFullscreenPrompt(true);
-    } else {
-      startInvestigation();
+    setIsOpenedFromSplash(true);
+    setShowObjectivesModal(true);
+  };
+
+  const handleCloseObjectives = () => {
+    setShowObjectivesModal(false);
+  };
+
+  const handleProceedFromObjectives = () => {
+    setShowObjectivesModal(false);
+    if (isOpenedFromSplash) {
+      setIsOpenedFromSplash(false);
+      const isFullscreenSupported = typeof document !== 'undefined' && !!document.documentElement.requestFullscreen;
+      const isCurrentlyFullscreen = typeof document !== 'undefined' && !!document.fullscreenElement;
+      if (isFullscreenSupported && !isCurrentlyFullscreen) {
+        setShowFullscreenPrompt(true);
+      } else {
+        startInvestigation();
+      }
     }
   };
 
@@ -132,6 +148,13 @@ export default function App() {
         </div>
       )}
 
+      {/* Objectives Modal */}
+      <ObjectivesModal
+        isOpen={showObjectivesModal}
+        onClose={handleCloseObjectives}
+        onStart={isOpenedFromSplash ? handleProceedFromObjectives : undefined}
+      />
+
       {/* Pages Router */}
       {pageView === 'splash' && (
         <SplashPage onStart={handleStartGame} />
@@ -154,6 +177,10 @@ export default function App() {
           onSegmentClick={handleSegmentClick}
           onAdvance={advanceLevel}
           onJumpToLevel={jumpToLevel}
+          onOpenObjectives={() => {
+            setIsOpenedFromSplash(false);
+            setShowObjectivesModal(true);
+          }}
         />
       )}
 

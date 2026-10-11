@@ -23,6 +23,7 @@ interface ArenaPageProps {
   onSegmentClick: (index: number) => void;
   onAdvance: () => void;
   onJumpToLevel: (levelIndex: number) => void;
+  onOpenObjectives?: () => void;
 }
 
 export function ArenaPage({
@@ -37,7 +38,8 @@ export function ArenaPage({
   onImageClick,
   onSegmentClick,
   onAdvance,
-  onJumpToLevel
+  onJumpToLevel,
+  onOpenObjectives
 }: ArenaPageProps) {
   
   const [isGuideOpen, setIsGuideOpen] = useState(false);
@@ -115,6 +117,19 @@ export function ArenaPage({
             <BookOpen className="w-4 h-4 text-[#f0c400]" />
             <span>Panduan</span>
           </button>
+
+          {onOpenObjectives && (
+            <button
+              id="btn-open-objectives"
+              type="button"
+              onClick={onOpenObjectives}
+              className="px-3.5 py-1.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#1f568d]/80 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm text-[#388ce0] hover:text-[#f0c400] hover:border-[#388ce0] font-title tracking-wider transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 glow-ocean"
+              title="Buka Tujuan Pembelajaran"
+            >
+              <Target className="w-4 h-4 text-[#388ce0]" />
+              <span>Tujuan</span>
+            </button>
+          )}
 
           {isCurrentAnswered && (
             <button
