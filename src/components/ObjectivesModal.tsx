@@ -103,7 +103,7 @@ export function ObjectivesModal({ isOpen, onClose, onStart }: ObjectivesModalPro
     >
       <div
         id="objectives-modal-card"
-        className="relative max-w-lg w-full bg-[#041a32] rounded-3xl p-5 sm:p-7 shadow-[0_0_35px_rgba(31,86,141,0.4)] flex flex-col border-2 border-[#1f568d] overflow-hidden"
+        className="relative max-w-lg w-full bg-[#041a32] rounded-3xl p-5 sm:p-7 shadow-none flex flex-col border-2 border-[#1f568d] overflow-hidden"
       >
         {/* Close Button */}
         <button
@@ -117,7 +117,7 @@ export function ObjectivesModal({ isOpen, onClose, onStart }: ObjectivesModalPro
 
         {/* Header */}
         <div className="flex items-center gap-3 pb-3 border-b border-[#0f3b66]">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#062444] border-2 border-[#f0c400] flex items-center justify-center shrink-0 glow-gold">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#062444] border-2 border-[#f0c400] flex items-center justify-center shrink-0">
             {slide.icon}
           </div>
           <div className="min-w-0 pr-6">
@@ -135,7 +135,7 @@ export function ObjectivesModal({ isOpen, onClose, onStart }: ObjectivesModalPro
           {slide.items.map((item, idx) => (
             <div
               key={idx}
-              className="rounded-2xl p-3 sm:p-4 border border-[#1f568d]/60 bg-[#062444]/60 shadow-xs flex flex-col gap-1 text-left"
+              className="rounded-2xl p-3 sm:p-4 border border-[#1f568d]/60 bg-[#062444]/60 shadow-none flex flex-col gap-1 text-left"
             >
               <div className="flex items-center gap-1.5 font-bold text-xs sm:text-sm text-[#388ce0] font-sans">
                 <Sparkles className="w-3.5 h-3.5 shrink-0 text-[#f0c400]" />
@@ -177,7 +177,7 @@ export function ObjectivesModal({ isOpen, onClose, onStart }: ObjectivesModalPro
                 }}
                 className={`transition-all duration-300 rounded-full cursor-pointer ${
                   i === currentSlide
-                    ? 'w-6 h-2 bg-[#f0c400] shadow-[0_0_8px_rgba(240,196,0,0.6)]'
+                    ? 'w-6 h-2 bg-[#f0c400]'
                     : 'w-2 h-2 bg-[#1f568d]/40 hover:bg-[#1f568d]'
                 }`}
                 title={`Slide ${i + 1}`}
@@ -189,9 +189,9 @@ export function ObjectivesModal({ isOpen, onClose, onStart }: ObjectivesModalPro
           <button
             type="button"
             onClick={handleNext}
-            className={`px-4 sm:px-5 py-2 rounded-xl text-xs font-title tracking-wider uppercase flex items-center gap-1 transition-all active:scale-95 cursor-pointer shadow-md ${
+            className={`px-4 sm:px-5 py-2 rounded-xl text-xs font-title tracking-wider uppercase flex items-center gap-1 transition-all active:scale-95 cursor-pointer shadow-none ${
               isLast
-                ? 'bg-gradient-to-r from-[#f0c400] via-[#e5b800] to-[#b38f00] hover:from-[#ffd21a] hover:to-[#c49d00] text-black font-bold shadow-[0_0_20px_rgba(240,196,0,0.4)]'
+                ? 'bg-gradient-to-r from-[#f0c400] via-[#e5b800] to-[#b38f00] hover:from-[#ffd21a] hover:to-[#c49d00] text-black font-bold'
                 : 'bg-gradient-to-r from-[#1f568d] via-[#256eb4] to-[#022949] hover:from-[#2877c2] hover:to-[#043660] border border-[#388ce0]/60 text-white'
             }`}
           >

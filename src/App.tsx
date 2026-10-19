@@ -92,7 +92,7 @@ export default function App() {
         id="btn-audio-toggle"
         type="button"
         onClick={handleToggleSound}
-        className="absolute top-3 right-3 sm:top-5 sm:right-5 md:top-6 md:right-6 2xl:top-10 2xl:right-10 z-50 p-2 sm:p-2.5 2xl:p-4 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#1f568d]/60 hover:border-[#f0c400]/70 rounded-xl 2xl:rounded-2xl text-[#8fabc6] hover:text-[#f0c400] transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 glow-ocean flex items-center justify-center select-none"
+        className="absolute top-3 right-3 sm:top-5 sm:right-5 md:top-6 md:right-6 2xl:top-10 2xl:right-10 z-50 p-2 sm:p-2.5 2xl:p-4 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#1f568d]/60 hover:border-[#f0c400]/70 rounded-xl 2xl:rounded-2xl text-[#8fabc6] hover:text-[#f0c400] transition-all cursor-pointer shadow-none hover:scale-105 active:scale-95 flex items-center justify-center select-none"
         title={isMutedState ? "Nyalakan Suara (Unmute)" : "Matikan Suara (Mute)"}
         aria-label={isMutedState ? "Nyalakan Suara" : "Matikan Suara"}
       >
@@ -106,10 +106,10 @@ export default function App() {
       {/* Mode Layar Penuh Modal */}
       {showFullscreenPrompt && (
         <div id="modal-fullscreen-prompt" className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 select-none animate-fadeIn">
-          <div id="card-fullscreen-prompt" className="relative max-w-sm w-full mx-auto bg-[#041a32] border-2 border-[#1f568d] shadow-[0_0_35px_rgba(31,86,141,0.4)] rounded-3xl p-6 sm:p-8 flex flex-col items-center text-center">
+          <div id="card-fullscreen-prompt" className="relative max-w-sm w-full mx-auto bg-[#041a32] border-2 border-[#1f568d] shadow-none rounded-3xl p-6 sm:p-8 flex flex-col items-center text-center">
             <div className="relative flex items-center justify-center mb-6">
               <div className="absolute w-20 h-20 bg-[#1f568d]/30 rounded-full animate-ping opacity-75" />
-              <div className="w-16 h-16 bg-[#062444] border-2 border-[#f0c400] rounded-2xl flex items-center justify-center text-3xl shadow-sm z-10 glow-gold">
+              <div className="w-16 h-16 bg-[#062444] border-2 border-[#f0c400] rounded-2xl flex items-center justify-center text-3xl z-10">
                 📺
               </div>
             </div>
@@ -127,7 +127,7 @@ export default function App() {
                 id="btn-fullscreen-yes"
                 type="button"
                 onClick={enterFullscreen}
-                className="flex-1 bg-gradient-to-r from-[#1f568d] via-[#256eb4] to-[#022949] hover:from-[#2877c2] hover:to-[#043660] border border-[#388ce0]/60 text-white font-extrabold py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(31,86,141,0.4)] active:scale-95 cursor-pointer"
+                className="flex-1 bg-gradient-to-r from-[#1f568d] via-[#256eb4] to-[#022949] hover:from-[#2877c2] hover:to-[#043660] border border-[#388ce0]/60 text-white font-extrabold py-2.5 rounded-xl transition-all shadow-none active:scale-95 cursor-pointer"
               >
                 Yes
               </button>

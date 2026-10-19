@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CheckCircle2, ArrowRight, X, BookOpen, Target, ImageIcon, FileText, Award, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import type { Level, MissClick, UserLevelAnswer } from '../../types';
 import { CAMPAIGN_LEVELS } from '../../data/questions';
@@ -56,6 +56,22 @@ export function ArenaPage({
   // Feedback visibility: show automatically when solved, or can be reopened/dismissed
   const isFeedbackVisible = (showFeedback || isCurrentAnswered) && dismissedFeedbackLevelId !== activeLevel.id;
 
+  // Keyboard navigation for Left & Right arrow keys
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isGuideOpen || isFeedbackVisible) return;
+      if (e.key === 'ArrowLeft' && currentLevelIndex > 0) {
+        setDismissedFeedbackLevelId(null);
+        onJumpToLevel(currentLevelIndex - 1);
+      } else if (e.key === 'ArrowRight' && currentLevelIndex < totalLevels - 1) {
+        setDismissedFeedbackLevelId(null);
+        onJumpToLevel(currentLevelIndex + 1);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentLevelIndex, totalLevels, isGuideOpen, isFeedbackVisible, onJumpToLevel]);
+
   return (
     <div id="arena-page" className="h-screen w-screen bg-[#021324] text-[#e2eaf4] flex items-center justify-center overflow-hidden relative select-none font-sans">
       
@@ -111,7 +127,7 @@ export function ArenaPage({
               setIsGuideOpen(true);
               setGuideSlide(0);
             }}
-            className="px-3.5 py-1.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#f0c400]/70 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm text-[#f0c400] hover:text-white font-title tracking-wider transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 glow-gold"
+            className="px-3.5 py-1.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#f0c400]/70 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm text-[#f0c400] hover:text-white font-title tracking-wider transition-all cursor-pointer shadow-none hover:scale-105 active:scale-95"
             title="Buka Panduan Cara Bermain"
           >
             <BookOpen className="w-4 h-4 text-[#f0c400]" />
@@ -123,7 +139,7 @@ export function ArenaPage({
               id="btn-open-objectives"
               type="button"
               onClick={onOpenObjectives}
-              className="px-3.5 py-1.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#1f568d]/80 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm text-[#388ce0] hover:text-[#f0c400] hover:border-[#388ce0] font-title tracking-wider transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 glow-ocean"
+              className="px-3.5 py-1.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-[#1f568d]/80 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm text-[#388ce0] hover:text-[#f0c400] hover:border-[#388ce0] font-title tracking-wider transition-all cursor-pointer shadow-none hover:scale-105 active:scale-95"
               title="Buka Tujuan Pembelajaran"
             >
               <Target className="w-4 h-4 text-[#388ce0]" />
@@ -136,7 +152,7 @@ export function ArenaPage({
               id="btn-reopen-feedback"
               type="button"
               onClick={() => setDismissedFeedbackLevelId(null)}
-              className="px-3.5 py-1.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-emerald-400/80 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm text-emerald-300 hover:text-white font-title tracking-wider transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95 glow-ocean"
+              className="px-3.5 py-1.5 bg-[#041a32]/90 hover:bg-[#062444] backdrop-blur-md border-2 border-emerald-400/80 rounded-xl flex items-center gap-1.5 text-xs sm:text-sm text-emerald-300 hover:text-white font-title tracking-wider transition-all cursor-pointer shadow-none hover:scale-105 active:scale-95"
               title="Buka Ulasan & Penjelasan Kasus Ini"
             >
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -150,17 +166,17 @@ export function ArenaPage({
           <div id="arena-hud-bottom-right" className="absolute bottom-4 right-4 z-30 flex items-center gap-2.5 select-none">
             <div 
               id="badge-anomaly-count"
-              className="px-3 py-1.5 bg-[#041a32]/90 backdrop-blur-md border-2 border-[#1f568d]/60 rounded-xl text-xs sm:text-sm text-[#f0c400] font-title tracking-wider shadow-lg flex items-center"
+              className="px-3 py-1.5 bg-[#041a32]/90 backdrop-blur-md border-2 border-[#1f568d]/60 rounded-xl text-xs sm:text-sm text-[#f0c400] font-title tracking-wider shadow-none flex items-center"
             >
               <span>{(foundHotspotIndices || []).length} / {currentHotspots.length} Anomali</span>
             </div>
           </div>
         )}
 
-        {/* Right Side: Level Selector in Cyber Oceanic Detective Theme (Level 1 - 10) - Centered Vertically */}
+        {/* Right Side: Level Selector in Cyber Oceanic Detective Theme (Level 1 - 10) - Compact for mobile */}
         <div
           id="arena-level-selector"
-          className="absolute right-2 sm:right-3 md:right-4 xl:right-5 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center gap-1 sm:gap-1.5 bg-gradient-to-b from-[#041a32]/95 via-[#062444]/95 to-[#021324]/95 backdrop-blur-md border-2 border-[#1f568d]/80 shadow-[0_8px_30px_rgba(0,0,0,0.65)] glow-ocean rounded-2xl sm:rounded-3xl p-1 sm:p-1.5 md:p-2 select-none pointer-events-auto"
+          className="absolute right-1 sm:right-2.5 md:right-3.5 xl:right-5 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center gap-0.5 sm:gap-1 md:gap-1.5 bg-gradient-to-b from-[#041a32]/95 via-[#062444]/95 to-[#021324]/95 backdrop-blur-md border sm:border-2 border-[#1f568d]/80 shadow-none rounded-xl sm:rounded-2xl md:rounded-3xl p-0.5 sm:p-1 md:p-1.5 select-none pointer-events-auto"
         >
           {Array.from({ length: totalLevels }, (_, i) => {
             const levelNum = i + 1;
@@ -179,14 +195,14 @@ export function ArenaPage({
                   setDismissedFeedbackLevelId(null);
                   onJumpToLevel(i);
                 }}
-                className={`relative w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-8.5 lg:h-8.5 2xl:w-10 2xl:h-10 rounded-lg sm:rounded-xl font-title text-[11px] sm:text-xs md:text-sm 2xl:text-base font-bold flex items-center justify-center transition-all duration-200 cursor-pointer ${
+                className={`relative w-[18px] h-[18px] sm:w-[22px] sm:h-[22px] md:w-7 md:h-7 lg:w-8 lg:h-8 rounded-[4px] sm:rounded-lg md:rounded-xl font-title text-[8px] sm:text-[10px] md:text-xs lg:text-sm font-bold flex items-center justify-center transition-all duration-200 cursor-pointer shadow-none ${
                   isCurrent
-                    ? 'bg-[#f0c400] text-[#021324] ring-2 sm:ring-3 ring-[#f0c400]/60 scale-110 shadow-lg font-black z-10 glow-gold'
+                    ? 'bg-[#f0c400] text-[#021324] ring-1.5 sm:ring-2 md:ring-3 ring-[#f0c400]/60 scale-110 font-black z-10 shadow-none'
                     : isAnswered
                     ? isCorrect
-                      ? 'bg-emerald-600/95 text-white hover:bg-emerald-500 hover:scale-105 border border-emerald-400/80 shadow-xs'
-                      : 'bg-[#0c3258]/80 text-[#8fabc6] hover:bg-[#124270] hover:text-[#f0c400] hover:scale-105 border border-[#1f568d]/50 shadow-xs'
-                    : 'bg-[#0c3258]/50 text-[#8fabc6] hover:bg-[#124270] hover:text-white hover:border-[#388ce0]/80 hover:scale-105 border border-[#1f568d]/40 shadow-xs'
+                      ? 'bg-emerald-600/95 text-white hover:bg-emerald-500 hover:scale-105 border border-emerald-400/80 shadow-none'
+                      : 'bg-[#0c3258]/80 text-[#8fabc6] hover:bg-[#124270] hover:text-[#f0c400] hover:scale-105 border border-[#1f568d]/50 shadow-none'
+                    : 'bg-[#0c3258]/50 text-[#8fabc6] hover:bg-[#124270] hover:text-white hover:border-[#388ce0]/80 hover:scale-105 border border-[#1f568d]/40 shadow-none'
                 }`}
                 title={`Kasus ${levelNum} (${level?.type === 'image' ? 'Citra' : 'Teks'}): ${level?.title || ''}${
                   isAnswered ? (isCorrect ? ' (Terpecahkan)' : ' (Selesai)') : ' (Klik untuk pindah kasus)'
@@ -196,7 +212,7 @@ export function ArenaPage({
                 {/* Status Indicator Badge */}
                 {isAnswered && (
                   <span
-                    className={`absolute -top-0.5 -right-0.5 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full border border-[#041a32] ${
+                    className={`absolute -top-0.5 -right-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full border border-[#041a32] ${
                       isCorrect ? 'bg-emerald-400' : 'bg-rose-500'
                     }`}
                   />
@@ -207,89 +223,123 @@ export function ArenaPage({
         </div>
 
         {/* Gameplay Area */}
-        <div id="arena-gameplay-area" className="flex-1 flex items-center justify-center px-8 sm:px-12 md:px-16 lg:px-20 pt-14 pb-12 sm:pt-16 sm:pb-14 md:pt-20 md:pb-16 min-h-0 relative select-none">
-          {activeLevel.type === 'image' && activeLevel.imageUrl ? (
-            /* SPOT THE ANOMALY PICTURE MODE */
-            <div id="arena-image-mode-wrapper" className="w-full h-full flex items-center justify-center p-2 sm:p-4">
-              <InteractiveImage
-                src={activeLevel.imageUrl}
-                alt={activeLevel.title}
-                hotspot={activeLevel.hotspot}
-                hotspots={activeLevel.hotspots}
-                foundHotspotIndices={foundHotspotIndices}
-                found={showFeedback || isCurrentAnswered}
-                missClicks={missClicks}
-                onClick={onImageClick}
-                disabled={showFeedback || isCurrentAnswered}
-              />
-            </div>
-          ) : (
-            /* SPOT THE HALLUCINATION TEXT MODE */
-            <div id="arena-text-case-card" className="w-full max-w-2xl lg:max-w-3xl 2xl:max-w-4xl bg-[#041a32]/95 border-2 border-[#1f568d]/60 rounded-2xl p-5 sm:p-7 text-xs sm:text-sm md:text-base leading-relaxed shadow-[0_12px_40px_rgba(0,0,0,0.65)] relative flex flex-col justify-between max-h-[72vh] sm:max-h-[78vh] 2xl:max-h-[80vh] overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#1f568d] via-[#388ce0] to-[#f0c400]"></div>
-              
-              <div className="text-[10px] sm:text-xs text-[#8fabc6] border-b border-[#0f3b66] pb-2.5 mb-3 uppercase tracking-wider flex items-center justify-between shrink-0 font-title">
-                <span>Bukti Dokumen #DOC-{activeLevel.id}</span>
-                <span className="px-2.5 py-0.5 bg-[#0a2f54]/70 border border-[#1f568d]/50 text-[#8fabc6] rounded font-title">
-                  {activeLevel.category}
-                </span>
-              </div>
+        <div id="arena-gameplay-area" className="flex-1 flex items-center justify-center px-2 sm:px-6 md:px-10 lg:px-14 pt-14 pb-12 sm:pt-16 sm:pb-14 md:pt-20 md:pb-16 min-h-0 relative select-none">
+          <div className="flex justify-center items-center gap-1.5 sm:gap-3 md:gap-4 w-full h-full min-h-0">
+            {/* Tombol Sebelumnya di Samping Kiri Gambar/Teks */}
+            <button
+              id="arena-prev-button"
+              type="button"
+              disabled={currentLevelIndex === 0}
+              onClick={() => {
+                setDismissedFeedbackLevelId(null);
+                onJumpToLevel(currentLevelIndex - 1);
+              }}
+              className="shrink-0 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-11 lg:h-11 rounded-full border sm:border-2 border-[#1f568d] hover:border-[#f0c400] bg-[#041a32]/90 hover:bg-[#062444] text-[#8fabc6] hover:text-[#f0c400] flex items-center justify-center transition-all cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:border-[#1f568d] disabled:hover:text-[#8fabc6] disabled:hover:bg-[#041a32]/90 active:scale-95 shadow-none z-20"
+              title="Kasus Sebelumnya"
+              aria-label="Kasus Sebelumnya"
+            >
+              <ChevronLeft className="w-3.5 h-3.5 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-[2.5]" />
+            </button>
 
-              {/* Scrollable text container as continuous paragraph */}
-              <div id="arena-text-segments-container" className="flex-1 overflow-y-auto my-2 pr-2 scrollbar-thin">
-                <p className="text-[#e2eaf4] text-justify text-xs sm:text-sm md:text-base leading-7 sm:leading-8 font-sans font-normal indent-6">
-                  {activeLevel.textSegments?.map((seg, idx) => {
-                    const isSelected = selectedSegmentIndex === idx;
-                    const isCorrectSeg = idx === activeLevel.correctSegmentIndex;
+            {activeLevel.type === 'image' && activeLevel.imageUrl ? (
+              /* SPOT THE ANOMALY PICTURE MODE */
+              <div id="arena-image-mode-wrapper" className="flex-1 h-full flex items-center justify-center p-1 sm:p-2 md:p-4 min-w-0">
+                <InteractiveImage
+                  src={activeLevel.imageUrl}
+                  alt={activeLevel.title}
+                  hotspot={activeLevel.hotspot}
+                  hotspots={activeLevel.hotspots}
+                  foundHotspotIndices={foundHotspotIndices}
+                  found={showFeedback || isCurrentAnswered}
+                  missClicks={missClicks}
+                  onClick={onImageClick}
+                  disabled={showFeedback || isCurrentAnswered}
+                />
+              </div>
+            ) : (
+              /* SPOT THE HALLUCINATION TEXT MODE */
+              <div id="arena-text-case-card" className="w-full max-w-2xl lg:max-w-3xl 2xl:max-w-4xl bg-[#041a32]/95 border-2 border-[#1f568d]/60 rounded-2xl p-4 sm:p-6 md:p-7 text-xs sm:text-sm md:text-base leading-relaxed shadow-none relative flex flex-col justify-between max-h-[72vh] sm:max-h-[78vh] 2xl:max-h-[80vh] overflow-hidden min-w-0">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#1f568d] via-[#388ce0] to-[#f0c400]"></div>
+                
+                <div className="text-[10px] sm:text-xs text-[#8fabc6] border-b border-[#0f3b66] pb-2.5 mb-3 uppercase tracking-wider flex items-center justify-between shrink-0 font-title">
+                  <span>Bukti Dokumen #DOC-{activeLevel.id}</span>
+                  <span className="px-2.5 py-0.5 bg-[#0a2f54]/70 border border-[#1f568d]/50 text-[#8fabc6] rounded font-title">
+                    {activeLevel.category}
+                  </span>
+                </div>
+
+                {/* Scrollable text container as continuous paragraph */}
+                <div id="arena-text-segments-container" className="flex-1 overflow-y-auto my-2 pr-2 scrollbar-thin">
+                  <p className="text-[#e2eaf4] text-justify text-xs sm:text-sm md:text-base leading-7 sm:leading-8 font-sans font-normal indent-6">
+                    {activeLevel.textSegments?.map((seg, idx) => {
+                      const isSelected = selectedSegmentIndex === idx;
+                      const isCorrectSeg = idx === activeLevel.correctSegmentIndex;
 
                       let highlightClass = "text-[#e2eaf4] hover:bg-[#f0c400]/25 hover:text-[#f7d000] transition-colors duration-150 rounded decoration-dotted underline underline-offset-4 decoration-[#1f568d]/70 hover:decoration-[#388ce0]";
-                    
-                    if ((showFeedback || isCurrentAnswered) && isCorrectSeg) {
-                      highlightClass = "bg-[#f0c400]/25 text-[#f7d000] font-semibold underline decoration-[#f0c400] underline-offset-4 glow-gold rounded px-0.5 shadow-sm";
-                    } else if (isSelected) {
-                      if (isCorrectSeg) {
-                        highlightClass = "bg-[#f0c400]/25 text-[#f7d000] font-semibold underline decoration-[#f0c400] underline-offset-4 glow-gold rounded px-0.5 shadow-sm";
-                      } else {
-                        highlightClass = "bg-rose-950/70 text-rose-300 font-semibold underline decoration-rose-500 underline-offset-4 animate-pulse glow-rose rounded px-0.5";
+                      
+                      if ((showFeedback || isCurrentAnswered) && isCorrectSeg) {
+                        highlightClass = "bg-[#f0c400]/25 text-[#f7d000] font-semibold underline decoration-[#f0c400] underline-offset-4 rounded px-0.5 shadow-none";
+                      } else if (isSelected) {
+                        if (isCorrectSeg) {
+                          highlightClass = "bg-[#f0c400]/25 text-[#f7d000] font-semibold underline decoration-[#f0c400] underline-offset-4 rounded px-0.5 shadow-none";
+                        } else {
+                          highlightClass = "bg-rose-950/70 text-rose-300 font-semibold underline decoration-rose-500 underline-offset-4 animate-pulse rounded px-0.5 shadow-none";
+                        }
                       }
-                    }
 
-                    return (
-                      <span
-                        key={`seg-${idx}`}
-                        id={`text-segment-${idx}`}
-                        role="button"
-                        tabIndex={(showFeedback || isCurrentAnswered) ? -1 : 0}
-                        onClick={() => !(showFeedback || isCurrentAnswered) && onSegmentClick(idx)}
-                        onKeyDown={(e) => {
-                          if (!(showFeedback || isCurrentAnswered) && (e.key === 'Enter' || e.key === ' ')) {
-                            e.preventDefault();
-                            onSegmentClick(idx);
-                          }
-                        }}
-                        className={`inline cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#388ce0] ${highlightClass}`}
-                        style={{ pointerEvents: (showFeedback || isCurrentAnswered) ? 'none' : 'auto' }}
-                        title={isCurrentAnswered ? "Kasus ini telah terpecahkan" : "Klik untuk memilih kalimat ini"}
-                      >
-                        {seg}
-                      </span>
-                    );
-                  })}
-                </p>
+                      return (
+                        <span
+                          key={`seg-${idx}`}
+                          id={`text-segment-${idx}`}
+                          role="button"
+                          tabIndex={(showFeedback || isCurrentAnswered) ? -1 : 0}
+                          onClick={() => !(showFeedback || isCurrentAnswered) && onSegmentClick(idx)}
+                          onKeyDown={(e) => {
+                            if (!(showFeedback || isCurrentAnswered) && (e.key === 'Enter' || e.key === ' ')) {
+                              e.preventDefault();
+                              onSegmentClick(idx);
+                            }
+                          }}
+                          className={`inline cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#388ce0] ${highlightClass}`}
+                          style={{ pointerEvents: (showFeedback || isCurrentAnswered) ? 'none' : 'auto' }}
+                          title={isCurrentAnswered ? "Kasus ini telah terpecahkan" : "Klik untuk memilih kalimat ini"}
+                        >
+                          {seg}
+                        </span>
+                      );
+                    })}
+                  </p>
+                </div>
+                
+                <div className="text-[9px] sm:text-[10px] text-[#8fabc6] border-t border-[#0f3b66] pt-2.5 mt-2 text-right uppercase shrink-0 font-title tracking-wide flex items-center justify-between">
+                  <span className="text-[#388ce0]">💡 Arahkan & klik kalimat yang memuat anomali</span>
+                  <span>Pemeriksaan Dokumen</span>
+                </div>
               </div>
-              
-              <div className="text-[9px] sm:text-[10px] text-[#8fabc6] border-t border-[#0f3b66] pt-2.5 mt-2 text-right uppercase shrink-0 font-title tracking-wide flex items-center justify-between">
-                <span className="text-[#388ce0]">💡 Arahkan & klik kalimat yang memuat anomali</span>
-                <span>Pemeriksaan Dokumen</span>
-              </div>
-            </div>
-          )}
+            )}
+
+            {/* Tombol Berikutnya di Samping Kanan Gambar/Teks */}
+            <button
+              id="arena-next-button"
+              type="button"
+              disabled={currentLevelIndex === totalLevels - 1}
+              onClick={() => {
+                setDismissedFeedbackLevelId(null);
+                onJumpToLevel(currentLevelIndex + 1);
+              }}
+              className="shrink-0 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-11 lg:h-11 rounded-full border sm:border-2 border-[#1f568d] hover:border-[#f0c400] bg-[#041a32]/90 hover:bg-[#062444] text-[#8fabc6] hover:text-[#f0c400] flex items-center justify-center transition-all cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:border-[#1f568d] disabled:hover:text-[#8fabc6] disabled:hover:bg-[#041a32]/90 active:scale-95 shadow-none z-20"
+              title="Kasus Berikutnya"
+              aria-label="Kasus Berikutnya"
+            >
+              <ChevronRight className="w-3.5 h-3.5 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-[2.5]" />
+            </button>
+          </div>
         </div>
 
         {/* MODAL 1: GAMEPLAY GUIDE (PANDUAN CARA BERMAIN MULTI-SLIDE) */}
         {isGuideOpen && (
           <div id="modal-gameplay-guide" className="absolute inset-0 bg-black/85 backdrop-blur-md z-45 flex items-center justify-center p-4 animate-fadeIn">
-            <div id="modal-guide-card" className="w-full max-w-lg bg-[#041a32] border-2 border-[#1f568d] rounded-2xl p-4 sm:p-5 shadow-[0_0_40px_rgba(31,86,141,0.5)] relative flex flex-col justify-between text-[#e2eaf4] select-none">
+            <div id="modal-guide-card" className="w-full max-w-lg bg-[#041a32] border-2 border-[#1f568d] rounded-2xl p-4 sm:p-5 shadow-none relative flex flex-col justify-between text-[#e2eaf4] select-none">
               <button
                 id="btn-close-guide-x"
                 type="button"
@@ -397,7 +447,7 @@ export function ArenaPage({
                     id="btn-guide-next"
                     type="button"
                     onClick={() => setGuideSlide((s) => Math.min(2, s + 1))}
-                    className="flex-1 py-2 bg-gradient-to-r from-[#1f568d] via-[#256eb4] to-[#022949] hover:from-[#2877c2] hover:to-[#043660] border border-[#388ce0]/60 text-white rounded-xl text-xs font-title tracking-wider uppercase flex items-center justify-center gap-1 transition-all cursor-pointer shadow-md hover:scale-[1.02] active:scale-95"
+                    className="flex-1 py-2 bg-gradient-to-r from-[#1f568d] via-[#256eb4] to-[#022949] hover:from-[#2877c2] hover:to-[#043660] border border-[#388ce0]/60 text-white rounded-xl text-xs font-title tracking-wider uppercase flex items-center justify-center gap-1 transition-all cursor-pointer shadow-none hover:scale-[1.02] active:scale-95"
                   >
                     <span>Lanjut</span>
                     <ChevronRight className="w-4 h-4" />
@@ -407,7 +457,7 @@ export function ArenaPage({
                     id="btn-close-guide-back"
                     type="button"
                     onClick={() => setIsGuideOpen(false)}
-                    className="flex-1 py-2 bg-gradient-to-r from-[#f0c400] via-[#e5b800] to-[#b38f00] hover:from-[#ffd21a] hover:to-[#c49d00] text-black font-title tracking-wider uppercase rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-all cursor-pointer shadow-[0_0_20px_rgba(240,196,0,0.4)] hover:scale-[1.02] active:scale-95"
+                    className="flex-1 py-2 bg-gradient-to-r from-[#f0c400] via-[#e5b800] to-[#b38f00] hover:from-[#ffd21a] hover:to-[#c49d00] text-black font-title tracking-wider uppercase rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-all cursor-pointer shadow-none hover:scale-[1.02] active:scale-95"
                   >
                     <span>Mulai Investigasi</span>
                     <Check className="w-4 h-4 stroke-[3px]" />
@@ -421,7 +471,7 @@ export function ArenaPage({
         {/* MODAL 2: FEEDBACK / REVEAL OVERLAY */}
         {isFeedbackVisible && (
           <div id="modal-feedback-reveal" className="absolute inset-0 bg-black/85 backdrop-blur-md z-45 flex items-center justify-center p-4 animate-fadeIn">
-            <div id="modal-feedback-card" className="w-full max-w-md bg-[#041a32] border-2 border-[#f0c400] rounded-2xl p-4 sm:p-5 shadow-[0_0_35px_rgba(240,196,0,0.35)] relative text-center max-h-[90vh] overflow-y-auto flex flex-col justify-center text-[#e2eaf4]">
+            <div id="modal-feedback-card" className="w-full max-w-md bg-[#041a32] border-2 border-[#f0c400] rounded-2xl p-4 sm:p-5 shadow-none relative text-center max-h-[90vh] overflow-y-auto flex flex-col justify-center text-[#e2eaf4]">
               {/* Dismiss X button */}
               <button
                 id="btn-dismiss-feedback-x"
@@ -434,7 +484,7 @@ export function ArenaPage({
               </button>
 
               {/* Correctness Header */}
-              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[#062444] border-2 border-[#f0c400] flex items-center justify-center mx-auto mb-2 sm:mb-3 glow-gold shrink-0">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[#062444] border-2 border-[#f0c400] flex items-center justify-center mx-auto mb-2 sm:mb-3 shrink-0">
                 <CheckCircle2 className="w-4 h-4 sm:w-6 sm:h-6 text-[#f0c400] animate-pulse" />
               </div>
 
@@ -465,7 +515,7 @@ export function ArenaPage({
                   id="btn-advance-level"
                   type="button"
                   onClick={onAdvance}
-                  className="flex-1 py-2.5 sm:py-3 bg-gradient-to-r from-[#1f568d] via-[#256eb4] to-[#022949] hover:from-[#2877c2] hover:to-[#043660] border border-[#388ce0]/60 text-white rounded-xl text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-[0_0_20px_rgba(31,86,141,0.4)] hover:shadow-[0_0_25px_rgba(56,140,224,0.6)] hover:scale-[1.02] active:scale-98"
+                  className="flex-1 py-2.5 sm:py-3 bg-gradient-to-r from-[#1f568d] via-[#256eb4] to-[#022949] hover:from-[#2877c2] hover:to-[#043660] border border-[#388ce0]/60 text-white rounded-xl text-[10px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-none hover:scale-[1.02] active:scale-98"
                 >
                   <span>
                     {allCompleted
