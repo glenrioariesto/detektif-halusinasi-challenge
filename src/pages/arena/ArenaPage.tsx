@@ -223,8 +223,8 @@ export function ArenaPage({
         </div>
 
         {/* Gameplay Area */}
-        <div id="arena-gameplay-area" className="flex-1 flex items-center justify-center px-2 sm:px-6 md:px-10 lg:px-14 pt-14 pb-12 sm:pt-16 sm:pb-14 md:pt-20 md:pb-16 min-h-0 relative select-none">
-          <div className="flex justify-center items-center gap-1.5 sm:gap-3 md:gap-4 w-full h-full min-h-0">
+        <div id="arena-gameplay-area" className="flex-1 flex items-center justify-center px-1 sm:px-4 md:px-8 lg:px-12 pt-12 pb-12 sm:pt-14 sm:pb-14 md:pt-18 md:pb-16 min-h-0 relative select-none">
+          <div className="flex justify-center items-center gap-1.5 sm:gap-2.5 md:gap-3.5 h-full min-h-0 max-w-full">
             {/* Tombol Sebelumnya di Samping Kiri Gambar/Teks */}
             <button
               id="arena-prev-button"
@@ -243,7 +243,7 @@ export function ArenaPage({
 
             {activeLevel.type === 'image' && activeLevel.imageUrl ? (
               /* SPOT THE ANOMALY PICTURE MODE */
-              <div id="arena-image-mode-wrapper" className="flex-1 h-full flex items-center justify-center p-1 sm:p-2 md:p-4 min-w-0">
+              <div id="arena-image-mode-wrapper" className="relative flex items-center justify-center h-full min-h-0 shrink">
                 <InteractiveImage
                   src={activeLevel.imageUrl}
                   alt={activeLevel.title}

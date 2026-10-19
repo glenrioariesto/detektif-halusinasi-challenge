@@ -121,7 +121,7 @@ export function InteractiveImage({
       id="interactive-image-container"
       ref={containerRef}
       type="button"
-      className="relative inline-block w-auto max-w-[85vw] sm:max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-5xl max-h-[65vh] sm:max-h-[75vh] 2xl:max-h-[82vh] bg-[#021324]/90 border border-[#1f568d]/60 rounded-2xl overflow-hidden cursor-crosshair mx-auto select-none text-left shadow-none shrink-0 p-0"
+      className="relative inline-block w-auto max-w-[85vw] sm:max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-5xl max-h-[65vh] sm:max-h-[75vh] 2xl:max-h-[82vh] bg-[#021324]/90 border border-[#1f568d]/60 rounded-2xl overflow-hidden cursor-crosshair select-none text-left shadow-none shrink-0 p-0"
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
